@@ -1,11 +1,4 @@
 {
-  "name": "Ichiyo",
-  "tagline": "Sản phẩm thủ công được làm bằng sự tỉ mỉ",
-  "heroTitle": "Chào mừng đến với Ichiyo",
-  "heroText": "Nơi giới thiệu những sản phẩm tôi tâm huyết thực hiện. Trang web chỉ để trưng bày, không bán hàng.",
-  "heroImage": "",
-  "aboutTitle": "Về Ichiyo",
-  "aboutText": "Đây là nội dung giới thiệu mẫu.\n\nBạn có thể sửa toàn bộ chữ này tại /admin → Cài đặt website → Thông tin chung.",
   "contact": {
     "email": "you@example.com",
     "phone": "",
@@ -14,5 +7,12 @@
     "instagram": "",
     "address": ""
   },
-  "footer": "© Ichiyo. Mọi quyền được bảo lưu."
+  "heroImage": "",
+  "heroText": "Nơi giới thiệu những sản phẩm tôi tâm huyết thực hiện. Trang web chỉ để trưng bày, không bán hàng.",
+  "name": "Ichiyo",
+  "aboutTitle": "Về Ichiyo",
+  "tagline": "Sản phẩm thủ công được làm bằng sự tỉ mỉ",
+  "aboutText": "Đây là nội dung giới thiệu mẫu.\n\nBạn có thể sửa toàn bộ chữ này tại /admin → Cài đặt website → Thông tin chung.",
+  "footer": "© Ichiyo. Mọi quyền được bảo lưu.",
+  "heroTitle": "Chào mừng đến với Ichiyo"
 }
