@@ -3,7 +3,7 @@ backend:
   repo: Saito205/T-p-h-a-Ichiyo
   branch: main
   # !!! THAY bằng địa chỉ Cloudflare Worker (decap-proxy) của bạn, xem README.md
-  base_url: https://decap-proxy.TEN-CUA-BAN.workers.dev
+  base_url: https://decap-proxy.ichiyo.workers.dev
 
 # Khi chạy thử trên máy: npx decap-server  (rồi mở http://localhost:5173/admin/)
 local_backend: true
