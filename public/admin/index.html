@@ -5,6 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>Quản trị nội dung</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      /* Giao diện admin: trắng + xanh lá. Nếu một khối nào không đổi,
+         mở F12, tìm tên class của khối đó rồi thêm/sửa selector bên dưới. */
+      body, button, input, textarea, select {
+        font-family: "Be Vietnam Pro", system-ui, "Segoe UI", sans-serif !important;
+      }
+      body, #nc-root > div { background: #f3faf6 !important; color: #17302a; }
+
+      /* Thanh trên cùng */
+      [class*="AppHeader"] {
+        background: #ffffff !important;
+        border-bottom: 1px solid #d9eadf !important;
+        box-shadow: none !important;
+      }
+      [class*="AppHeader"] a { color: #587064 !important; font-weight: 600; }
+      [class*="AppHeader"] a:hover,
+      [class*="AppHeader"] a[class*="active"] { color: #15804f !important; }
+
+      /* Khung bên trái và khung chính */
+      [class*="SidebarContainer"],
+      [class*="CollectionTopContainer"],
+      [class*="ListCard"],
+      [class*="GridCard"] {
+        background: #ffffff !important;
+        border: 1px solid #d9eadf !important;
+        border-radius: 18px !important;
+        box-shadow: none !important;
+      }
+      [class*="ListCard"]:hover, [class*="GridCard"]:hover { border-color: #1e9e63 !important; }
+
+      /* Mục đang chọn ở sidebar */
+      [class*="SidebarNavLink"][class*="active"],
+      [class*="SidebarNavLink"].active {
+        background: #e2f4ea !important;
+        color: #15804f !important;
+        border-left-color: #15804f !important;
+      }
+
+      /* Nút chính (+ Sản phẩm, Publish...) */
+      button[class*="primary"], button[class*="Primary"], [class*="AddButton"],
+      [class*="PublishButton"], [class*="PublishDropDown"] > button {
+        background: #15804f !important;
+        border-radius: 999px !important;
+        color: #fff !important;
+      }
+      button[class*="primary"]:hover, [class*="AddButton"]:hover { background: #0e3b2c !important; }
+
+      /* Nút "Quick add", ô tìm kiếm, ô nhập liệu */
+      [class*="QuickAdd"] button, [class*="QuickAdd"] > div > button {
+        background: #0e3b2c !important; border-radius: 999px !important;
+      }
+      input[type="text"], input[type="search"], input[type="number"], textarea, select {
+        border-radius: 12px !important;
+      }
+      input:focus, textarea:focus { border-color: #1e9e63 !important; box-shadow: 0 0 0 3px rgba(30,158,99,.25) !important; }
+
+      /* Chữ tiêu đề */
+      h1, h2, h3 { color: #0e3b2c; letter-spacing: -0.01em; }
+    </style>
   </head>
   <body>
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
