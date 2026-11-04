@@ -1,11 +1,11 @@
 {
-  "title": "Sản phẩm mẫu 1",
-  "category": "Bộ sưu tập A",
   "summary": "Mô tả ngắn gọn về sản phẩm mẫu số 1.",
-  "description": "Đây là phần mô tả chi tiết.\n\nBạn có thể xoá hoặc sửa sản phẩm này trong trang /admin.",
-  "cover": "",
-  "gallery": [],
-  "link": "",
   "featured": true,
-  "order": 1
+  "order": 1,
+  "gallery": [],
+  "cover": "",
+  "title": "Sản phẩm mẫu a",
+  "link": "",
+  "description": "Đây là phần mô tả chi tiết.\n\nBạn có thể xoá hoặc sửa sản phẩm này trong trang /admin.",
+  "category": "Bộ sưu tập A"
 }
