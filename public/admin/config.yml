@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: Saito205/T-p-h-a-Ichiyo
+  repo: Saito205/Ichiyo
   branch: main
   # !!! THAY bằng địa chỉ Cloudflare Worker (decap-proxy) của bạn, xem README.md
   base_url: https://decap-proxy.ichiyo.workers.dev
@@ -11,8 +11,8 @@ local_backend: true
 publish_mode: simple
 media_folder: public/uploads
 public_folder: /uploads
-site_url: https://saito205.github.io/T-p-h-a-Ichiyo/
-display_url: https://saito205.github.io/T-p-h-a-Ichiyo/
+site_url: https://saito205.github.io/Ichiyo/
+display_url: https://saito205.github.io/Ichiyo/
 
 slug:
   encoding: ascii
