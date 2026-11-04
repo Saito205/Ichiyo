@@ -1,18 +1,18 @@
 {
   "contact": {
-    "email": "you@example.com",
-    "phone": "",
-    "zalo": "",
+    "email": "datnt29052005@gmail.com",
+    "phone": "0328223449",
+    "zalo": "0328223449",
     "facebook": "",
     "instagram": "",
-    "address": ""
+    "address": "305E Nguyễn Văn Linh, Ninh Kiều, Cần Thơ"
   },
   "heroImage": "",
-  "heroText": "Nơi giới thiệu những sản phẩm tôi tâm huyết thực hiện. Trang web chỉ để trưng bày, không bán hàng.",
-  "name": "Ichiyo",
-  "aboutTitle": "Về Ichiyo",
-  "tagline": "Sản phẩm thủ công được làm bằng sự tỉ mỉ",
-  "aboutText": "Đây là nội dung giới thiệu mẫu.\n\nBạn có thể sửa toàn bộ chữ này tại /admin → Cài đặt website → Thông tin chung.",
-  "footer": "© Ichiyo. Mọi quyền được bảo lưu.",
-  "heroTitle": "Chào mừng đến với Ichiyo"
+  "heroText": "Nơi giới thiệu những sản phẩm tôi nhập về từ nước ngoài. Trang web chỉ để trưng bày, không bán hàng.",
+  "name": "Tạp Hóa Ichiyo",
+  "aboutTitle": "",
+  "tagline": "Sản phẩm đến từ Trung Quốc, Nhật Bản",
+  "aboutText": "",
+  "footer": "© Tạp Hóa Ichiyo.",
+  "heroTitle": "Chào mừng đến với Tạp Hóa Ichiyo"
 }
