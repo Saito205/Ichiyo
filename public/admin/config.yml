@@ -7,6 +7,8 @@ backend:
 
 # Khi chạy thử trên máy: npx decap-server  (rồi mở http://localhost:5173/admin/)
 local_backend: true
+locale: vi
+logo_url: https://saito205.github.io/Ichiyo/favicon.svg
 
 publish_mode: simple
 media_folder: public/uploads
