@@ -1,21 +1,26 @@
-import { Link } from 'react-router-dom'
 import { asset } from '../content.js'
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, onOpen }) {
   return (
-    <Link to={`/san-pham/${product.slug}`} className="product-card">
-      <div className="product-thumb">
+    <button type="button" className="card" onClick={onOpen} aria-label={`Xem chi tiết ${product.title}`}>
+      <div className="card-media">
         {product.cover ? (
-          <img src={asset(product.cover)} alt={product.title} loading="lazy" />
+          <img src={asset(product.cover)} alt="" loading="lazy" />
         ) : (
-          <div className="product-thumb-empty"><i className="bi bi-image" /></div>
+          <span className="card-empty" aria-hidden="true">一</span>
+        )}
+        {product.featured && (
+          <span className="badge">
+            <span className="dot" />
+            Nổi bật
+          </span>
         )}
       </div>
-      <div className="p-3">
-        {product.category && <div className="product-cat">{product.category}</div>}
-        <h3 className="h5 mb-1">{product.title}</h3>
-        {product.summary && <p className="mb-0 text-muted small">{product.summary}</p>}
+      <div className="card-body">
+        {product.category && <span className="card-cat">{product.category}</span>}
+        <h3>{product.title}</h3>
+        {product.summary && <p>{product.summary}</p>}
       </div>
-    </Link>
+    </button>
   )
 }
