@@ -7,5 +7,7 @@
   "gallery": [],
   "link": "",
   "featured": false,
-  "order": 3
+  "order": 3,
+  "categoryId": "bo-suu-tap-b",
+  "attributes": {}
 }
