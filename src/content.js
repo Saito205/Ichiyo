@@ -30,3 +30,19 @@ export function paragraphs(text) {
     .map((t) => t.trim())
     .filter(Boolean)
 }
+export function parsePrice(value) {
+  if (typeof value === 'number') return Number.isFinite(value) && value > 0 ? value : 0
+  if (typeof value === 'string') {
+    const cleaned = value.trim()
+    if (!cleaned) return 0
+    const digits = cleaned.replace(/[^\d]/g, '')
+    return digits ? Number(digits) : 0
+  }
+  return 0
+}
+export function formatPrice(value) {
+  const num = parsePrice(value)
+  if (num > 0) return `${num.toLocaleString('vi-VN')} ₫`
+  if (typeof value === 'string' && value.trim()) return value.trim()
+  return ''
+}

@@ -413,3 +413,125 @@ a { color: var(--green); }
   .nav-badge { right: calc(50% - 22px); }
 }
 
+
+
+/* ---------- Bộ chọn số lượng (+/-) trên Thẻ sản phẩm, Modal và Giỏ hàng ---------- */
+.card-qty {
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 2px;
+  height: 40px; padding: 3px;
+  border: 1px solid var(--green); border-radius: 999px;
+  background: var(--white); color: var(--forest);
+  box-shadow: 0 6px 16px -8px rgba(14, 59, 44, 0.5);
+}
+.card-qty-btn {
+  display: grid; place-items: center;
+  width: 32px; height: 32px; padding: 0;
+  border: 0; border-radius: 50%;
+  background: var(--mist); color: var(--green);
+  transition: background 0.15s, color 0.15s;
+}
+.card-qty-btn:hover { background: var(--green); color: #fff; }
+.card-qty-value {
+  min-width: 26px; padding: 0 4px;
+  font-size: 0.9rem; font-weight: 700; text-align: center; color: var(--forest);
+}
+
+.qty-stepper {
+  display: inline-flex; align-items: center;
+  height: 42px; padding: 3px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--mist);
+}
+.qty-btn {
+  display: grid; place-items: center;
+  width: 34px; height: 34px; padding: 0;
+  border: 0; border-radius: 50%;
+  background: var(--white); color: var(--forest);
+  box-shadow: 0 2px 6px -2px rgba(14, 59, 44, 0.18);
+  transition: background 0.15s, color 0.15s;
+}
+.qty-btn:hover:not(:disabled) { background: var(--green); color: #fff; }
+.qty-btn:disabled { opacity: 0.4; cursor: default; box-shadow: none; }
+.qty-value {
+  min-width: 36px; padding: 0 8px;
+  font-size: 0.95rem; font-weight: 700; text-align: center; color: var(--forest);
+}
+
+.cart-actions {
+  display: flex; align-items: center; gap: 12px;
+}
+
+@media (max-width: 700px) {
+  .card-qty { top: 8px; right: 8px; height: 34px; padding: 2px; }
+  .card-qty-btn { width: 28px; height: 28px; }
+  .card-qty-value { min-width: 22px; font-size: 0.82rem; }
+  .cart-item { grid-template-columns: 72px minmax(0, 1fr); }
+  .cart-actions { grid-column: 1 / -1; justify-content: flex-end; padding-top: 6px; border-top: 1px dashed var(--line); }
+  .qty-stepper { height: 36px; }
+  .qty-btn { width: 28px; height: 28px; }
+  .qty-value { min-width: 30px; font-size: 0.88rem; }
+}
+
+
+/* ---------- Hiển thị Giá tiền (Thẻ sản phẩm, Modal, Giỏ hàng) ---------- */
+.card-price {
+  color: var(--green);
+  font-size: 1.02rem;
+  font-weight: 800;
+  margin-top: 2px;
+}
+.modal-price {
+  color: var(--green);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.cart-item-price {
+  color: var(--green);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.cart-item-subtotal {
+  color: var(--forest);
+  font-weight: 500;
+}
+.cart-item-subtotal strong {
+  color: var(--green);
+  font-weight: 800;
+}
+.cart-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.cart-footer .cart-more {
+  margin-top: 0;
+}
+.cart-total {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 22px;
+  border-radius: 16px;
+  background: var(--mist);
+  border: 1px solid var(--line);
+  color: var(--forest);
+  font-size: 1rem;
+}
+.cart-total strong {
+  color: var(--green);
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+@media (max-width: 700px) {
+  .product-grid .card-price { font-size: 0.86rem; }
+  .modal-price { font-size: 1.25rem; }
+  .cart-footer { flex-direction: column-reverse; align-items: stretch; }
+  .cart-total { justify-content: space-between; }
+}

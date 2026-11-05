@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import Icon from './Icon.jsx'
-import { asset, paragraphs, categories } from '../content.js'
+import { asset, paragraphs, categories, formatPrice } from '../content.js'
 import { useCart } from '../lib/cart.js'
 
 export default function ProductModal({ product, onClose }) {
   const dialogRef = useRef(null)
   const [active, setActive] = useState(0)
-  const { has, add, remove } = useCart()
-  const inCart = has(product.slug)
+  const [pickQty, setPickQty] = useState(1)
+  const { getQuantity, add, increment, decrement, remove } = useCart()
+  const cartQty = getQuantity(product.slug)
+  const inCart = cartQty > 0
+  const priceLabel = formatPrice(product.price)
   const category = categories.find((c) => c.id === product.categoryId)
   const attributes = (category?.filters || []).filter((f) => product.attributes?.[f.id])
   const images = [product.cover, ...(product.gallery ?? [])].filter(Boolean)
@@ -75,6 +78,7 @@ export default function ProductModal({ product, onClose }) {
         <div className="modal-info">
           {product.category && <span className="card-cat">{product.category}</span>}
           <h2>{product.title}</h2>
+          {priceLabel && <div className="modal-price">{priceLabel}</div>}
           {product.summary && <p className="modal-summary">{product.summary}</p>}
           {attributes.length > 0 && (
             <dl className="product-attributes">
@@ -95,19 +99,75 @@ export default function ProductModal({ product, onClose }) {
             {inCart ? (
               <>
                 <span className="in-cart-note">
-                  <Icon name="check" size={18} /> Đã thêm vào giỏ
+                  <Icon name="check" size={18} /> Đã trong giỏ:
                 </span>
-                <button type="button" className="btn btn-outline" onClick={() => remove(product.slug)}>
+                <div className="qty-stepper" role="group" aria-label={`Số lượng ${product.title}`}>
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    aria-label="Giảm số lượng"
+                    onClick={() => decrement(product.slug)}
+                  >
+                    <Icon name="minus" size={16} />
+                  </button>
+                  <span className="qty-value" aria-live="polite">
+                    {cartQty}
+                  </span>
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    aria-label="Tăng số lượng"
+                    onClick={() => increment(product.slug)}
+                  >
+                    <Icon name="plus" size={16} />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => remove(product.slug)}
+                >
                   <Icon name="trash" size={18} /> Xóa khỏi giỏ
                 </button>
-                <a href="#/cart" className="text-link">
+                <a href="#/cart" className="text-link" onClick={() => dialogRef.current?.close()}>
                   Xem giỏ hàng
                 </a>
               </>
             ) : (
-              <button type="button" className="btn" onClick={() => add(product.slug)}>
-                <Icon name="cart" size={18} /> Thêm vào giỏ
-              </button>
+              <>
+                <div className="qty-stepper" role="group" aria-label="Chọn số lượng muốn thêm">
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    aria-label="Giảm số lượng"
+                    disabled={pickQty <= 1}
+                    onClick={() => setPickQty((q) => Math.max(1, q - 1))}
+                  >
+                    <Icon name="minus" size={16} />
+                  </button>
+                  <span className="qty-value" aria-live="polite">
+                    {pickQty}
+                  </span>
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    aria-label="Tăng số lượng"
+                    onClick={() => setPickQty((q) => q + 1)}
+                  >
+                    <Icon name="plus" size={16} />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => {
+                    add(product.slug, pickQty)
+                    setPickQty(1)
+                  }}
+                >
+                  <Icon name="cart" size={18} /> Thêm vào giỏ
+                </button>
+              </>
             )}
             {product.link && (
               <a href={product.link} target="_blank" rel="noreferrer" className="btn btn-outline">

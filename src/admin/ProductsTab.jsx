@@ -2,6 +2,7 @@ import { useState } from 'react'
 import AdminIcon from './AdminIcon.jsx'
 import ProductEditor from './ProductEditor.jsx'
 import { previewSrc } from './media.js'
+import { formatPrice } from '../content.js'
 
 export default function ProductsTab({ products, categories, onSave, onDelete, onReload }) {
   const [q, setQ] = useState('')
@@ -17,6 +18,7 @@ export default function ProductsTab({ products, categories, onSave, onDelete, on
       slug: null,
       data: {
         title: '',
+        price: '',
         category: '',
         categoryId: '',
         attributes: {},
@@ -64,27 +66,33 @@ export default function ProductsTab({ products, categories, onSave, onDelete, on
         </p>
       ) : (
         <ul className="ad-list">
-          {shown.map((p) => (
-            <li key={p.slug}>
-              <button type="button" className="ad-item" onClick={() => setEditing(p)}>
-                <span className="ad-item-img">
-                  {p.data.cover ? (
-                    <img src={previewSrc(p.data.cover)} alt="" loading="lazy" />
-                  ) : (
-                    <span aria-hidden="true">一</span>
-                  )}
-                </span>
-                <span className="ad-item-info">
-                  <strong>{p.data.title}</strong>
-                  <small>{p.data.category || 'Chưa có danh mục'}</small>
-                </span>
-                {p.data.featured && <span className="ad-tag">Nổi bật</span>}
-                <span className="ad-item-edit">
-                  <AdminIcon name="edit" /> Sửa
-                </span>
-              </button>
-            </li>
-          ))}
+          {shown.map((p) => {
+            const priceLabel = formatPrice(p.data.price)
+            return (
+              <li key={p.slug}>
+                <button type="button" className="ad-item" onClick={() => setEditing(p)}>
+                  <span className="ad-item-img">
+                    {p.data.cover ? (
+                      <img src={previewSrc(p.data.cover)} alt="" loading="lazy" />
+                    ) : (
+                      <span aria-hidden="true">一</span>
+                    )}
+                  </span>
+                  <span className="ad-item-info">
+                    <strong>{p.data.title}</strong>
+                    <small>
+                      {p.data.category || 'Chưa có danh mục'}
+                      {priceLabel ? ` · ${priceLabel}` : ''}
+                    </small>
+                  </span>
+                  {p.data.featured && <span className="ad-tag">Nổi bật</span>}
+                  <span className="ad-item-edit">
+                    <AdminIcon name="edit" /> Sửa
+                  </span>
+                </button>
+              </li>
+            )
+          })}
         </ul>
       )}
 

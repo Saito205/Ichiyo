@@ -7,12 +7,14 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
   const ref = useRef(null)
   const [form, setForm] = useState(() => ({
     ...product.data,
+    price: product.data.price ?? '',
     categoryId: categoryFor(product.data, categories)?.id || '',
     attributes: product.data.attributes || {},
   }))
   const [initial] = useState(() =>
     JSON.stringify({
       ...product.data,
+      price: product.data.price ?? '',
       categoryId: categoryFor(product.data, categories)?.id || '',
       attributes: product.data.attributes || {},
     }),
@@ -47,8 +49,13 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
     setBusy(true)
     setError('')
     try {
+      const rawPrice = String(form.price ?? '').trim()
+      const numericPrice = rawPrice && /^\d+$/.test(rawPrice.replace(/[.,\s]/g, ''))
+        ? Number(rawPrice.replace(/[.,\s]/g, ''))
+        : rawPrice
       await onSave(product.slug, {
         title: form.title.trim(),
+        price: numericPrice,
         categoryId: category?.id || '',
         category: category?.name || '',
         attributes: cleanAttributes(form.attributes, category),
@@ -100,10 +107,20 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
           </div>
 
           <div className="ad-dialog-body">
-            <label className="ad-field">
-              <span className="ad-label">Tên sản phẩm</span>
-              <input className="ad-input" required {...text('title')} />
-            </label>
+            <div className="ad-row">
+              <label className="ad-field">
+                <span className="ad-label">Tên sản phẩm</span>
+                <input className="ad-input" required {...text('title')} />
+              </label>
+              <label className="ad-field">
+                <span className="ad-label">Giá tiền (VNĐ)</span>
+                <input
+                  className="ad-input"
+                  placeholder="Ví dụ: 45000 (để trống nếu Liên hệ)"
+                  {...text('price')}
+                />
+              </label>
+            </div>
 
             <div className="ad-row">
               <label className="ad-field">
