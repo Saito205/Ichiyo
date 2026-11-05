@@ -1,12 +1,13 @@
-import { asset, formatPrice } from '../content.js'
+import { asset, hasVariants, priceRangeLabel } from '../content.js'
 import { useCart } from '../lib/cart.js'
 import Icon from './Icon.jsx'
 
 export default function ProductCard({ product, onOpen }) {
-  const { getQuantity, add, increment, decrement } = useCart()
-  const qty = getQuantity(product.slug)
+  const { getQuantity, getProductQuantity, add, increment, decrement } = useCart()
+  const withVariants = hasVariants(product)
+  const qty = withVariants ? getProductQuantity(product.slug) : getQuantity(product.slug)
   const inCart = qty > 0
-  const priceLabel = formatPrice(product.price)
+  const priceLabel = priceRangeLabel(product)
 
   return (
     <article className="card">
@@ -37,7 +38,18 @@ export default function ProductCard({ product, onOpen }) {
         </div>
       </button>
 
-      {inCart ? (
+      {withVariants ? (
+        // Sản phẩm có phân loại: mở cửa sổ chi tiết để khách chọn loại trước khi thêm.
+        <button
+          type="button"
+          className={`card-cart ${inCart ? 'on' : ''}`}
+          aria-label={`Chọn phân loại ${product.title}${inCart ? ` (đã có ${qty} trong giỏ)` : ''}`}
+          title="Chọn phân loại"
+          onClick={onOpen}
+        >
+          {inCart ? <span className="card-cart-count">{qty}</span> : <Icon name="cart" size={20} />}
+        </button>
+      ) : inCart ? (
         <div className="card-qty" role="group" aria-label={`Số lượng ${product.title}`}>
           <button
             type="button"

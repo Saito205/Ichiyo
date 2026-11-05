@@ -1,24 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
-import { categoryFor, cleanAttributes } from '../lib/catalog.js'
+import { categoryFor, cleanAttributes, searchText } from '../lib/catalog.js'
 import AdminIcon from './AdminIcon.jsx'
 import { ImageField, GalleryField } from './ImageField.jsx'
 
+const newVariantId = () => `v${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
+const toPriceNumber = (value) => Number(String(value ?? '').replace(/[.,\s₫đ]/g, ''))
+
 export default function ProductEditor({ product, categories, onSave, onDelete, onClose }) {
   const ref = useRef(null)
-  const [form, setForm] = useState(() => ({
+  const makeForm = () => ({
     ...product.data,
     price: product.data.price ?? '',
     categoryId: categoryFor(product.data, categories)?.id || '',
     attributes: product.data.attributes || {},
-  }))
-  const [initial] = useState(() =>
-    JSON.stringify({
-      ...product.data,
-      price: product.data.price ?? '',
-      categoryId: categoryFor(product.data, categories)?.id || '',
-      attributes: product.data.attributes || {},
-    }),
-  )
+    // Giá của từng phân loại được giữ dạng chuỗi trong form để dễ gõ.
+    variants: (product.data.variants || []).map((v) => ({
+      id: v.id || newVariantId(),
+      label: v.label ?? '',
+      price: v.price ?? '',
+    })),
+  })
+  const [form, setForm] = useState(makeForm)
+  const [initial] = useState(() => JSON.stringify(form))
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const dirty = JSON.stringify(form) !== initial
@@ -35,6 +38,19 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
   }, [])
 
   const set = (key) => (value) => setForm((f) => ({ ...f, [key]: value }))
+  const variants = form.variants || []
+  const setVariant = (id, patch) =>
+    setForm((f) => ({
+      ...f,
+      variants: f.variants.map((v) => (v.id === id ? { ...v, ...patch } : v)),
+    }))
+  const addVariant = () =>
+    setForm((f) => ({
+      ...f,
+      variants: [...(f.variants || []), { id: newVariantId(), label: '', price: '' }],
+    }))
+  const removeVariant = (id) =>
+    setForm((f) => ({ ...f, variants: f.variants.filter((v) => v.id !== id) }))
   const text = (key) => ({ value: form[key] ?? '', onChange: (e) => set(key)(e.target.value) })
 
   const tryClose = () => {
@@ -46,6 +62,23 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
   const submit = async (e) => {
     e.preventDefault()
     if (!form.title.trim()) return setError('Hãy nhập tên sản phẩm.')
+    // Phân loại: bỏ dòng trống hoàn toàn, các dòng còn lại cần đủ tên và giá hợp lệ.
+    const cleanedVariants = variants
+      .map((v) => ({ id: v.id, label: String(v.label).trim(), price: String(v.price ?? '').trim() }))
+      .filter((v) => v.label || v.price)
+    for (const v of cleanedVariants) {
+      if (!v.label) return setError('Hãy nhập tên cho tất cả phân loại.')
+      if (!/^\d+$/.test(v.price.replace(/[.,\s₫đ]/g, '')) || toPriceNumber(v.price) <= 0)
+        return setError(`Hãy nhập giá hợp lệ (số lớn hơn 0) cho phân loại "${v.label}".`)
+    }
+    const labels = cleanedVariants.map((v) => searchText(v.label))
+    if (new Set(labels).size !== labels.length) return setError('Tên các phân loại bị trùng nhau.')
+    const savedVariants = cleanedVariants.map((v) => ({
+      id: v.id,
+      label: v.label,
+      price: toPriceNumber(v.price),
+    }))
+
     setBusy(true)
     setError('')
     try {
@@ -55,7 +88,11 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
         : rawPrice
       await onSave(product.slug, {
         title: form.title.trim(),
-        price: numericPrice,
+        // Có phân loại thì giá chung là giá thấp nhất; giá thật nằm ở từng phân loại.
+        price: savedVariants.length
+          ? Math.min(...savedVariants.map((v) => v.price))
+          : numericPrice,
+        variants: savedVariants,
         categoryId: category?.id || '',
         category: category?.name || '',
         attributes: cleanAttributes(form.attributes, category),
@@ -116,11 +153,64 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
                 <span className="ad-label">Giá tiền (VNĐ)</span>
                 <input
                   className="ad-input"
-                  placeholder="Ví dụ: 45000 (để trống nếu Liên hệ)"
+                  placeholder={
+                    variants.length
+                      ? 'Giá được đặt theo từng phân loại bên dưới'
+                      : 'Ví dụ: 45000 (để trống nếu Liên hệ)'
+                  }
+                  disabled={variants.length > 0}
                   {...text('price')}
                 />
               </label>
             </div>
+
+            <section className="admin-product-variants">
+              <h3>Phân loại sản phẩm (không bắt buộc)</h3>
+              {variants.length === 0 ? (
+                <p className="ad-hint">
+                  Không phân loại: sản phẩm chỉ có 1 loại và 1 giá ở ô “Giá tiền”. Bấm “Thêm phân
+                  loại” nếu muốn bán nhiều loại với giá khác nhau (ví dụ: 1 cặp – 25000, 2 cặp – 50000).
+                </p>
+              ) : (
+                <ul className="variant-rows">
+                  {variants.map((v, i) => (
+                    <li key={v.id} className="variant-row">
+                      <label className="ad-field">
+                        <span className="ad-label">Tên phân loại {i + 1}</span>
+                        <input
+                          className="ad-input"
+                          placeholder="Ví dụ: 1 cặp"
+                          value={v.label}
+                          onChange={(e) => setVariant(v.id, { label: e.target.value })}
+                        />
+                      </label>
+                      <label className="ad-field">
+                        <span className="ad-label">Giá (VNĐ)</span>
+                        <input
+                          className="ad-input"
+                          inputMode="numeric"
+                          placeholder="Ví dụ: 25000"
+                          value={v.price}
+                          onChange={(e) => setVariant(v.id, { price: e.target.value })}
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        className="ad-icon-btn variant-remove"
+                        aria-label={`Xóa phân loại ${v.label || i + 1}`}
+                        title="Xóa phân loại"
+                        onClick={() => removeVariant(v.id)}
+                      >
+                        <AdminIcon name="trash" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <button type="button" className="ad-btn ghost" onClick={addVariant}>
+                <AdminIcon name="plus" /> Thêm phân loại
+              </button>
+            </section>
 
             <div className="ad-row">
               <label className="ad-field">

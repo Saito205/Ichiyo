@@ -1,17 +1,19 @@
-import { products, asset, formatPrice, parsePrice } from '../content.js'
+import { products, asset, formatPrice, findVariant, unitPriceOf } from '../content.js'
 import { useCart } from '../lib/cart.js'
 import Icon from '../components/Icon.jsx'
 
 export default function Cart({ onOpen }) {
   const { items: cartItems, count, increment, decrement, remove, clear } = useCart()
   const items = cartItems
-    .map(({ slug, quantity }) => {
+    .map(({ slug, variantId, quantity }) => {
       const product = products.find((p) => p.slug === slug)
-      return product ? { ...product, quantity } : null
+      if (!product) return null
+      const variant = findVariant(product, variantId)
+      return { ...product, quantity, variantId, variant, unitPrice: unitPriceOf(product, variantId) }
     })
     .filter(Boolean)
 
-  const totalPrice = items.reduce((sum, p) => sum + parsePrice(p.price) * p.quantity, 0)
+  const totalPrice = items.reduce((sum, p) => sum + p.unitPrice * p.quantity, 0)
 
   const handleClear = () => {
     if (window.confirm('Xóa tất cả sản phẩm khỏi giỏ?')) clear()
@@ -48,12 +50,13 @@ export default function Cart({ onOpen }) {
           </div>
           <ol className="cart-list">
             {items.map((p, i) => {
-              const unitPrice = parsePrice(p.price)
-              const priceLabel = formatPrice(p.price)
+              const unitPrice = p.unitPrice
+              const priceLabel = p.variant ? formatPrice(unitPrice) : formatPrice(p.price)
               const subtotal = unitPrice * p.quantity
+              const name = p.variant ? `${p.title} (${p.variant.label})` : p.title
 
               return (
-                <li className="cart-item" key={p.slug}>
+                <li className="cart-item" key={`${p.slug}::${p.variantId}`}>
                   <span className="cart-index" aria-hidden="true">
                     {i + 1}
                   </span>
@@ -74,6 +77,11 @@ export default function Cart({ onOpen }) {
                   <div className="cart-info">
                     {p.category && <span className="card-cat">{p.category}</span>}
                     <h2>{p.title}</h2>
+                    {p.variant && (
+                      <span className="cart-variant">
+                        Phân loại: <strong>{p.variant.label}</strong>
+                      </span>
+                    )}
                     {priceLabel && (
                       <div className="cart-item-price">
                         <span>{priceLabel}</span>
@@ -89,13 +97,13 @@ export default function Cart({ onOpen }) {
                   </div>
 
                   <div className="cart-actions">
-                    <div className="qty-stepper" role="group" aria-label={`Số lượng ${p.title}`}>
+                    <div className="qty-stepper" role="group" aria-label={`Số lượng ${name}`}>
                       <button
                         type="button"
                         className="qty-btn"
-                        onClick={() => decrement(p.slug)}
+                        onClick={() => decrement(p.slug, p.variantId)}
                         aria-label={
-                          p.quantity === 1 ? `Xóa ${p.title} khỏi giỏ` : `Giảm số lượng ${p.title}`
+                          p.quantity === 1 ? `Xóa ${name} khỏi giỏ` : `Giảm số lượng ${name}`
                         }
                         title={p.quantity === 1 ? 'Xóa khỏi giỏ' : 'Giảm số lượng'}
                       >
@@ -107,8 +115,8 @@ export default function Cart({ onOpen }) {
                       <button
                         type="button"
                         className="qty-btn"
-                        onClick={() => increment(p.slug)}
-                        aria-label={`Tăng số lượng ${p.title}`}
+                        onClick={() => increment(p.slug, p.variantId)}
+                        aria-label={`Tăng số lượng ${name}`}
                         title="Tăng số lượng"
                       >
                         <Icon name="plus" size={16} />
@@ -118,8 +126,8 @@ export default function Cart({ onOpen }) {
                     <button
                       type="button"
                       className="cart-remove"
-                      onClick={() => remove(p.slug)}
-                      aria-label={`Xóa ${p.title} khỏi giỏ`}
+                      onClick={() => remove(p.slug, p.variantId)}
+                      aria-label={`Xóa ${name} khỏi giỏ`}
                     >
                       <Icon name="trash" size={18} />
                       <span>Xóa</span>

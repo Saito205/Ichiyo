@@ -2,7 +2,7 @@ import { useState } from 'react'
 import AdminIcon from './AdminIcon.jsx'
 import ProductEditor from './ProductEditor.jsx'
 import { previewSrc } from './media.js'
-import { formatPrice } from '../content.js'
+import { formatPrice, normalizeVariants, priceRangeLabel } from '../content.js'
 
 export default function ProductsTab({ products, categories, onSave, onDelete, onReload }) {
   const [q, setQ] = useState('')
@@ -19,6 +19,7 @@ export default function ProductsTab({ products, categories, onSave, onDelete, on
       data: {
         title: '',
         price: '',
+        variants: [],
         category: '',
         categoryId: '',
         attributes: {},
@@ -67,7 +68,9 @@ export default function ProductsTab({ products, categories, onSave, onDelete, on
       ) : (
         <ul className="ad-list">
           {shown.map((p) => {
-            const priceLabel = formatPrice(p.data.price)
+            const priceLabel = p.data.variants?.length
+              ? priceRangeLabel({ variants: normalizeVariants(p.data.variants) })
+              : formatPrice(p.data.price)
             return (
               <li key={p.slug}>
                 <button type="button" className="ad-item" onClick={() => setEditing(p)}>

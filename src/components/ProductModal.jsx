@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Icon from './Icon.jsx'
-import { asset, paragraphs, categories, formatPrice } from '../content.js'
+import { asset, paragraphs, categories, formatPrice, hasVariants, findVariant, unitPriceOf, priceRangeLabel } from '../content.js'
 import { useCart } from '../lib/cart.js'
 
 export default function ProductModal({ product, onClose }) {
@@ -8,9 +8,17 @@ export default function ProductModal({ product, onClose }) {
   const [active, setActive] = useState(0)
   const [pickQty, setPickQty] = useState(1)
   const { getQuantity, add, increment, decrement, remove } = useCart()
-  const cartQty = getQuantity(product.slug)
+  const variants = product.variants || []
+  const withVariants = hasVariants(product)
+  // Mở từ giỏ hàng thì chọn đúng loại đã thêm, không thì chọn phân loại đầu tiên; sản phẩm không phân loại dùng variantId rỗng.
+  const [variantId, setVariantId] = useState(() =>
+    findVariant(product, product.variantId) ? product.variantId : variants[0]?.id || '',
+  )
+  const cartQty = getQuantity(product.slug, variantId)
   const inCart = cartQty > 0
-  const priceLabel = formatPrice(product.price)
+  const priceLabel = withVariants
+    ? formatPrice(unitPriceOf(product, variantId)) || priceRangeLabel(product)
+    : formatPrice(product.price)
   const category = categories.find((c) => c.id === product.categoryId)
   const attributes = (category?.filters || []).filter((f) => product.attributes?.[f.id])
   const images = [product.cover, ...(product.gallery ?? [])].filter(Boolean)
@@ -79,6 +87,30 @@ export default function ProductModal({ product, onClose }) {
           {product.category && <span className="card-cat">{product.category}</span>}
           <h2>{product.title}</h2>
           {priceLabel && <div className="modal-price">{priceLabel}</div>}
+          {withVariants && (
+            <div className="variant-picker" role="radiogroup" aria-label="Phân loại">
+              {variants.map((v) => {
+                const inCartQty = getQuantity(product.slug, v.id)
+                return (
+                  <button
+                    key={v.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={v.id === variantId}
+                    className={`variant-chip ${v.id === variantId ? 'on' : ''}`}
+                    onClick={() => {
+                      setVariantId(v.id)
+                      setPickQty(1)
+                    }}
+                  >
+                    <span className="variant-chip-label">{v.label}</span>
+                    <span className="variant-chip-price">{formatPrice(v.price)}</span>
+                    {inCartQty > 0 && <span className="variant-chip-count">Trong giỏ ×{inCartQty}</span>}
+                  </button>
+                )
+              })}
+            </div>
+          )}
           {product.summary && <p className="modal-summary">{product.summary}</p>}
           {attributes.length > 0 && (
             <dl className="product-attributes">
@@ -106,7 +138,7 @@ export default function ProductModal({ product, onClose }) {
                     type="button"
                     className="qty-btn"
                     aria-label="Giảm số lượng"
-                    onClick={() => decrement(product.slug)}
+                    onClick={() => decrement(product.slug, variantId)}
                   >
                     <Icon name="minus" size={16} />
                   </button>
@@ -117,7 +149,7 @@ export default function ProductModal({ product, onClose }) {
                     type="button"
                     className="qty-btn"
                     aria-label="Tăng số lượng"
-                    onClick={() => increment(product.slug)}
+                    onClick={() => increment(product.slug, variantId)}
                   >
                     <Icon name="plus" size={16} />
                   </button>
@@ -125,7 +157,7 @@ export default function ProductModal({ product, onClose }) {
                 <button
                   type="button"
                   className="btn btn-outline"
-                  onClick={() => remove(product.slug)}
+                  onClick={() => remove(product.slug, variantId)}
                 >
                   <Icon name="trash" size={18} /> Xóa khỏi giỏ
                 </button>
@@ -161,7 +193,7 @@ export default function ProductModal({ product, onClose }) {
                   type="button"
                   className="btn"
                   onClick={() => {
-                    add(product.slug, pickQty)
+                    add(product.slug, pickQty, variantId)
                     setPickQty(1)
                   }}
                 >

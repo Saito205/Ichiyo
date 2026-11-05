@@ -188,3 +188,16 @@ label:focus-within > .ad-file + * , .ad-btn:focus-within, .ad-add-img:focus-with
   .admin-section-heading { align-items: flex-start; flex-direction: column; gap: 16px; }
   .admin-category-editor, .admin-guide-preview { padding: 20px; }
 }
+
+/* ---------- Phân loại sản phẩm trong trình sửa ---------- */
+.admin-product-variants { padding: 18px; margin-bottom: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--mist); }
+.admin-product-variants h3 { font-size: .95rem; margin-bottom: 12px; color: var(--forest); }
+.admin-product-variants > .ad-hint { margin-bottom: 14px; }
+.variant-rows { list-style: none; margin: 0 0 4px; padding: 0; display: grid; gap: 4px; }
+.variant-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; align-items: end; gap: 0 12px; }
+.variant-row .variant-remove { margin-bottom: 16px; }
+@media (max-width: 800px) {
+  .variant-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .variant-row .ad-field:nth-child(2) { grid-column: 1; }
+  .variant-row .variant-remove { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin-bottom: 0; }
+}
