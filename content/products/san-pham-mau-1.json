@@ -12,5 +12,10 @@
   "featured": true,
   "order": 1,
   "categoryId": "bo-suu-tap-a",
-  "attributes": {}
+  "attributes": {
+    "filter-caadd9a6-331a-47e0-9f93-bbc9117e3d1e": "Trắng"
+  },
+  "price": 50000,
+  "createdAt": "",
+  "updatedAt": "2026-11-05T18:02:02.202Z"
 }
