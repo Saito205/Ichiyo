@@ -9,6 +9,18 @@ const paths = {
     </>
   ),
   guide: <path d="M12 5v16M12 5C8 2 4 3 2 4v15c4-1 7-1 10 2 3-3 6-3 10-2V4c-2-1-6-2-10 1Z" />,
+  cart: (
+    <>
+      <circle cx="9" cy="20" r="1.3" />
+      <circle cx="18" cy="20" r="1.3" />
+      <path d="M3 4h2.5l2.3 11h10.4l2-8H6.5" />
+    </>
+  ),
+  plus: <path d="M12 5v14M5 12h14" />,
+  check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
+  trash: (
+    <path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3" />
+  ),
   left: <path d="m14 5-7 7 7 7" />,
   right: <path d="m10 5 7 7-7 7" />,
   arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,

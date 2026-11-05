@@ -1,12 +1,15 @@
 import { site, asset } from '../content.js'
 import Icon from './Icon.jsx'
+import { useCart } from '../lib/cart.js'
 const links = [
   ['home', '#/', 'Home'],
   ['products', '#/products', 'Sản phẩm'],
   ['guide', '#/guide', 'Hướng dẫn'],
+  ['cart', '#/cart', 'Giỏ hàng'],
 ]
 export default function Header({ page = 'home' }) {
   const name = site.name || 'Ichiyo'
+  const { count } = useCart()
   return (
     <header className="site-header">
       <div className="wrap header-inner">
@@ -29,8 +32,14 @@ export default function Header({ page = 'home' }) {
               href={href}
               className={`nav-item ${page === key ? 'active' : ''}`}
               aria-current={page === key ? 'page' : undefined}
+              aria-label={key === 'cart' && count > 0 ? `${label}, ${count} sản phẩm` : undefined}
             >
               <Icon name={key} size={23} />
+              {key === 'cart' && count > 0 && (
+                <span className="nav-badge" aria-hidden="true">
+                  {count > 99 ? '99+' : count}
+                </span>
+              )}
               <span>{label}</span>
             </a>
           ))}

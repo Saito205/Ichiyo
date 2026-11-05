@@ -5,6 +5,7 @@ import ProductModal from './components/ProductModal.jsx'
 import GuideContent from './components/GuideContent.jsx'
 import Home from './pages/Home.jsx'
 import Products from './pages/Products.jsx'
+import Cart from './pages/Cart.jsx'
 import { site, guide } from './content.js'
 const subscribe = (callback) => {
   window.addEventListener('hashchange', callback)
@@ -14,6 +15,7 @@ const getPage = () => {
   const path = window.location.hash.replace(/^#\/?/, '').split(/[/?]/)[0]
   if (path === 'products' || path === 'san-pham') return 'products'
   if (path === 'guide' || path === 'huong-dan') return 'guide'
+  if (path === 'cart' || path === 'gio-hang') return 'cart'
   return 'home'
 }
 function Page({ page }) {
@@ -25,6 +27,8 @@ function Page({ page }) {
           <Home onOpen={setSelected} />
         ) : page === 'products' ? (
           <Products onOpen={setSelected} />
+        ) : page === 'cart' ? (
+          <Cart onOpen={setSelected} />
         ) : (
           <section className="wrap guide-page">
             <GuideContent guide={guide} />
@@ -40,7 +44,14 @@ function Page({ page }) {
 export default function App() {
   const page = useSyncExternalStore(subscribe, getPage)
   useEffect(() => {
-    const label = page === 'products' ? 'Sản phẩm' : page === 'guide' ? 'Hướng dẫn' : 'Home'
+    const label =
+      page === 'products'
+        ? 'Sản phẩm'
+        : page === 'guide'
+          ? 'Hướng dẫn'
+          : page === 'cart'
+            ? 'Giỏ hàng'
+            : 'Home'
     document.title = `${label} | ${site.name || 'Ichiyo'}`
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [page])

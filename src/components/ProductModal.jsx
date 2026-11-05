@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import Icon from './Icon.jsx'
 import { asset, paragraphs, categories } from '../content.js'
+import { useCart } from '../lib/cart.js'
 
 export default function ProductModal({ product, onClose }) {
   const dialogRef = useRef(null)
   const [active, setActive] = useState(0)
+  const { has, add, remove } = useCart()
+  const inCart = has(product.slug)
   const category = categories.find((c) => c.id === product.categoryId)
   const attributes = (category?.filters || []).filter((f) => product.attributes?.[f.id])
   const images = [product.cover, ...(product.gallery ?? [])].filter(Boolean)
@@ -88,11 +91,30 @@ export default function ProductModal({ product, onClose }) {
               <p key={i}>{t}</p>
             ))}
           </div>
-          {product.link && (
-            <a href={product.link} target="_blank" rel="noreferrer" className="btn">
-              Xem thêm <Icon name="external" size={18} />
-            </a>
-          )}
+          <div className="modal-actions">
+            {inCart ? (
+              <>
+                <span className="in-cart-note">
+                  <Icon name="check" size={18} /> Đã thêm vào giỏ
+                </span>
+                <button type="button" className="btn btn-outline" onClick={() => remove(product.slug)}>
+                  <Icon name="trash" size={18} /> Xóa khỏi giỏ
+                </button>
+                <a href="#/cart" className="text-link">
+                  Xem giỏ hàng
+                </a>
+              </>
+            ) : (
+              <button type="button" className="btn" onClick={() => add(product.slug)}>
+                <Icon name="cart" size={18} /> Thêm vào giỏ
+              </button>
+            )}
+            {product.link && (
+              <a href={product.link} target="_blank" rel="noreferrer" className="btn btn-outline">
+                Xem thêm <Icon name="external" size={18} />
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </dialog>
