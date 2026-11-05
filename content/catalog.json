@@ -1,0 +1,22 @@
+{
+  "categories": [
+    {
+      "id": "bo-suu-tap-a",
+      "name": "Bộ sưu tập A",
+      "filters": [
+        {
+          "id": "filter-62124afe-18b3-4379-97b9-e5072858fc4d",
+          "name": "Màu",
+          "options": [
+            "Trắng"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bo-suu-tap-b",
+      "name": "Bộ sưu tập B",
+      "filters": []
+    }
+  ]
+}
