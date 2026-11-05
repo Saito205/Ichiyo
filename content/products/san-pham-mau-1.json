@@ -1,11 +1,14 @@
 {
-  "summary": "Mô tả ngắn gọn về sản phẩm mẫu số 1.",
-  "featured": true,
-  "order": 1,
-  "gallery": [],
-  "cover": "",
-  "title": "Sản phẩm mẫu a",
+  "title": "Bìa lạnh trắng 74*105mm dày 1,5cm",
+  "category": "Bộ sưu tập A",
+  "summary": "",
+  "description": "",
+  "cover": "/uploads/11863-wnzljl.webp",
+  "gallery": [
+    "/uploads/11864-7uh31l.webp",
+    "/uploads/11865-5pwjjm.webp"
+  ],
   "link": "",
-  "description": "Đây là phần mô tả chi tiết.\n\nBạn có thể xoá hoặc sửa sản phẩm này trong trang /admin.",
-  "category": "Bộ sưu tập A"
+  "featured": true,
+  "order": 1
 }
