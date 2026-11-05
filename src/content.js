@@ -1,25 +1,32 @@
-// Đọc nội dung từ thư mục /content (do Decap CMS ghi vào) ngay lúc build.
+import { categoryFor, normalizeCatalog } from './lib/catalog.js'
+import { normalizeGuide } from './lib/guide.js'
 const siteFiles = import.meta.glob('/content/site.json', { eager: true })
 const productFiles = import.meta.glob('/content/products/*.json', { eager: true })
-
+const catalogFiles = import.meta.glob('/content/catalog.json', { eager: true })
+const guideFiles = import.meta.glob('/content/guide.json', { eager: true })
 export const site = Object.values(siteFiles)[0]?.default ?? {}
-
-export const products = Object.entries(productFiles)
-  .map(([path, mod]) => ({
-    slug: path.split('/').pop().replace(/\.json$/, ''),
-    ...mod.default,
-  }))
-  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || a.title.localeCompare(b.title))
-
-export const categories = [...new Set(products.map((p) => p.category).filter(Boolean))]
-
-// Ảnh upload qua CMS có dạng "/uploads/abc.jpg" -> thêm base để chạy được ở thư mục con.
+const rawProducts = Object.entries(productFiles).map(([path, mod]) => ({
+  ...mod.default,
+  slug: path
+    .split('/')
+    .pop()
+    .replace(/\.json$/, ''),
+}))
+export const catalog = normalizeCatalog(Object.values(catalogFiles)[0]?.default, rawProducts)
+export const categories = catalog.categories
+export const products = rawProducts.map((p) => {
+  const category = categoryFor(p, categories)
+  return { ...p, categoryId: category?.id || '', category: category?.name || p.category || '' }
+})
+export const guide = normalizeGuide(Object.values(guideFiles)[0]?.default)
 export function asset(path) {
   if (!path) return ''
   if (/^(https?:|data:)/.test(path)) return path
   return import.meta.env.BASE_URL + path.replace(/^\/+/, '')
 }
-
 export function paragraphs(text) {
-  return (text || '').split(/\n\s*\n/).map((t) => t.trim()).filter(Boolean)
+  return (text || '')
+    .split(/\n\s*\n/)
+    .map((t) => t.trim())
+    .filter(Boolean)
 }

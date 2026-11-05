@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import Icon from './Icon.jsx'
-import { asset, paragraphs } from '../content.js'
+import { asset, paragraphs, categories } from '../content.js'
 
 export default function ProductModal({ product, onClose }) {
   const dialogRef = useRef(null)
   const [active, setActive] = useState(0)
+  const category = categories.find((c) => c.id === product.categoryId)
+  const attributes = (category?.filters || []).filter((f) => product.attributes?.[f.id])
   const images = [product.cover, ...(product.gallery ?? [])].filter(Boolean)
 
   useEffect(() => {
@@ -29,7 +31,12 @@ export default function ProductModal({ product, onClose }) {
       onClose={onClose}
       onClick={handleBackdrop}
     >
-      <button type="button" className="modal-close" aria-label="Đóng" onClick={() => dialogRef.current.close()}>
+      <button
+        type="button"
+        className="modal-close"
+        aria-label="Đóng"
+        onClick={() => dialogRef.current.close()}
+      >
         <Icon name="close" />
       </button>
 
@@ -39,7 +46,9 @@ export default function ProductModal({ product, onClose }) {
             {images.length > 0 ? (
               <img src={asset(images[active])} alt={product.title} />
             ) : (
-              <span className="card-empty" aria-hidden="true">一</span>
+              <span className="card-empty" aria-hidden="true">
+                一
+              </span>
             )}
           </div>
           {images.length > 1 && (
@@ -64,8 +73,20 @@ export default function ProductModal({ product, onClose }) {
           {product.category && <span className="card-cat">{product.category}</span>}
           <h2>{product.title}</h2>
           {product.summary && <p className="modal-summary">{product.summary}</p>}
+          {attributes.length > 0 && (
+            <dl className="product-attributes">
+              {attributes.map((f) => (
+                <div key={f.id}>
+                  <dt>{f.name}</dt>
+                  <dd>{product.attributes[f.id]}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
           <div className="modal-desc">
-            {paragraphs(product.description).map((t, i) => <p key={i}>{t}</p>)}
+            {paragraphs(product.description).map((t, i) => (
+              <p key={i}>{t}</p>
+            ))}
           </div>
           {product.link && (
             <a href={product.link} target="_blank" rel="noreferrer" className="btn">

@@ -2,7 +2,9 @@ import { REPO, BRANCH } from './config.js'
 
 const API = 'https://api.github.com'
 let token = ''
-export const setAuthToken = (t) => { token = t || '' }
+export const setAuthToken = (t) => {
+  token = t || ''
+}
 
 export class ApiError extends Error {
   constructor(message, status) {
@@ -24,7 +26,11 @@ async function request(path, { method = 'GET', body, raw = false } = {}) {
   })
   if (!res.ok) {
     let msg = res.statusText
-    try { msg = (await res.json()).message || msg } catch { /* bỏ qua */ }
+    try {
+      msg = (await res.json()).message || msg
+    } catch {
+      /* bỏ qua */
+    }
     if (/fast forward/i.test(msg)) msg = 'Repo vừa có thay đổi mới. Hãy tải lại trang rồi lưu lại.'
     throw new ApiError(msg, res.status)
   }
@@ -63,7 +69,8 @@ export async function loadProducts() {
 
 function bytesToBase64(bytes) {
   let s = ''
-  for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000))
+  for (let i = 0; i < bytes.length; i += 0x8000)
+    s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000))
   return btoa(s)
 }
 const blobToBase64 = async (blob) => bytesToBase64(new Uint8Array(await blob.arrayBuffer()))
@@ -79,14 +86,37 @@ export async function commitFiles(message, files) {
     files.map(async (f) => {
       if (f.remove) return { path: f.path, mode: '100644', type: 'blob', sha: null }
       const content = f.blob ? await blobToBase64(f.blob) : textToBase64(f.text)
-      const blob = await request(repo('/git/blobs'), { method: 'POST', body: { content, encoding: 'base64' } })
+      const blob = await request(repo('/git/blobs'), {
+        method: 'POST',
+        body: { content, encoding: 'base64' },
+      })
       return { path: f.path, mode: '100644', type: 'blob', sha: blob.sha }
     }),
   )
-  const newTree = await request(repo('/git/trees'), { method: 'POST', body: { base_tree: commit.tree.sha, tree } })
+  const newTree = await request(repo('/git/trees'), {
+    method: 'POST',
+    body: { base_tree: commit.tree.sha, tree },
+  })
   const created = await request(repo('/git/commits'), {
     method: 'POST',
     body: { message, tree: newTree.sha, parents: [parent] },
   })
   await request(repo(`/git/refs/heads/${BRANCH}`), { method: 'PATCH', body: { sha: created.sha } })
+}
+
+export async function loadCatalog() {
+  try {
+    return await readJson('content/catalog.json')
+  } catch (e) {
+    if (e.status === 404) return null
+    throw e
+  }
+}
+export async function loadGuide() {
+  try {
+    return await readJson('content/guide.json')
+  } catch (e) {
+    if (e.status === 404) return null
+    throw e
+  }
 }
