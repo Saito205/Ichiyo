@@ -15,7 +15,14 @@
   "attributes": {
     "filter-caadd9a6-331a-47e0-9f93-bbc9117e3d1e": "Trắng"
   },
-  "price": 50000,
+  "price": 25000,
   "createdAt": "",
-  "updatedAt": "2026-11-05T18:02:02.202Z"
+  "updatedAt": "2026-11-05T18:13:13.919Z",
+  "variants": [
+    {
+      "id": "vmw3v5wiear5f",
+      "label": "1 cặp",
+      "price": 25000
+    }
+  ]
 }
