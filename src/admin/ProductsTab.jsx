@@ -59,6 +59,12 @@ export default function ProductsTab({ products, categories, onSave, onDelete, on
         </button>
       </div>
 
+      <p className="ad-count" role="status">
+        {shown.length === products.length
+          ? `${products.length} sản phẩm`
+          : `${shown.length} / ${products.length} sản phẩm`}
+      </p>
+
       {shown.length === 0 ? (
         <p className="ad-empty">
           {products.length
@@ -66,7 +72,7 @@ export default function ProductsTab({ products, categories, onSave, onDelete, on
             : 'Chưa có sản phẩm. Bấm “Thêm sản phẩm” để tạo cái đầu tiên.'}
         </p>
       ) : (
-        <ul className="ad-list">
+        <ul className="ad-list ad-stagger">
           {shown.map((p) => {
             const priceLabel = p.data.variants?.length
               ? priceRangeLabel({ variants: normalizeVariants(p.data.variants) })
@@ -88,6 +94,9 @@ export default function ProductsTab({ products, categories, onSave, onDelete, on
                       {priceLabel ? ` · ${priceLabel}` : ''}
                     </small>
                   </span>
+                  {p.data.variants?.length > 0 && (
+                    <span className="ad-tag soft">{p.data.variants.length} phân loại</span>
+                  )}
                   {p.data.featured && <span className="ad-tag">Nổi bật</span>}
                   <span className="ad-item-edit">
                     <AdminIcon name="edit" /> Sửa

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './admin.css'
 import AdminIcon from './AdminIcon.jsx'
+import OverviewTab from './OverviewTab.jsx'
 import ProductsTab from './ProductsTab.jsx'
 import CategoriesTab from './CategoriesTab.jsx'
 import GuideTab from './GuideTab.jsx'
@@ -42,17 +43,24 @@ async function loadData() {
   }
 }
 const tabs = [
-  ['products', 'Sản phẩm'],
-  ['categories', 'Danh mục & bộ lọc'],
-  ['guide', 'Hướng dẫn'],
-  ['settings', 'Cài đặt'],
+  ['overview', 'Tổng quan', 'home'],
+  ['products', 'Sản phẩm', 'box'],
+  ['categories', 'Danh mục & bộ lọc', 'tag'],
+  ['guide', 'Hướng dẫn', 'book'],
+  ['settings', 'Cài đặt', 'sliders'],
 ]
+// Tiêu đề lớn của từng trang (Danh mục và Hướng dẫn đã có tiêu đề riêng bên trong).
+const pageMeta = {
+  overview: ['Tổng quan', 'Số liệu nhanh về cửa hàng của bạn.'],
+  products: ['Sản phẩm', 'Thêm, chỉnh sửa và quản lý toàn bộ sản phẩm.'],
+  settings: ['Cài đặt', 'Thông tin chung và liên hệ hiển thị trên website.'],
+}
 export default function Admin() {
   const [token, setTokenState] = useState(getToken)
   const [loginError, setLoginError] = useState('')
   const [fatal, setFatal] = useState('')
   const [data, setData] = useState(null)
-  const [tab, setTab] = useState('products')
+  const [tab, setTab] = useState('overview')
   const [toast, setToast] = useState(null)
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -243,55 +251,71 @@ export default function Admin() {
   return (
     <div className="ad-shell">
       <header className="ad-top">
-        <div className="ad-brand">
-          <span className="ad-mark" aria-hidden="true">
-            一
-          </span>{' '}
-          Quản trị
-        </div>
-        <nav className="ad-tabs" aria-label="Mục quản trị">
-          {tabs.map(([id, label]) => (
-            <button
-              key={id}
-              type="button"
-              disabled={saving}
-              className={tab === id ? 'on' : ''}
-              aria-current={tab === id ? 'page' : undefined}
-              onClick={() => {
-                if (id !== tab && canLeave()) {
-                  setDirty(false)
-                  setTab(id)
-                }
+        <div className="ad-top-inner">
+          <div className="ad-brand">
+            <span className="ad-mark" aria-hidden="true">
+              一
+            </span>
+            <span className="ad-brand-name">Quản trị</span>
+          </div>
+          <nav className="ad-tabs" aria-label="Mục quản trị">
+            {tabs.map(([id, label, icon]) => (
+              <button
+                key={id}
+                type="button"
+                disabled={saving}
+                className={tab === id ? 'on' : ''}
+                aria-current={tab === id ? 'page' : undefined}
+                aria-label={label}
+                title={label}
+                onClick={() => {
+                  if (id !== tab && canLeave()) {
+                    setDirty(false)
+                    setTab(id)
+                  }
+                }}
+              >
+                <AdminIcon name={icon} size={16} />
+                <span>{label}</span>
+              </button>
+            ))}
+          </nav>
+          <div className="ad-user">
+            <a
+              href="#/"
+              className="ad-link"
+              onClick={(e) => {
+                if (!canLeave()) e.preventDefault()
               }}
             >
-              {label}
+              <span className="ad-link-text">Xem trang</span> <AdminIcon name="external" size={15} />
+            </a>
+            {data?.me && <img src={data.me.avatar_url} alt={data.me.login} title={data.me.login} />}
+            <button
+              type="button"
+              className="ad-icon-btn"
+              disabled={saving}
+              aria-label="Đăng xuất"
+              title="Đăng xuất"
+              onClick={logout}
+            >
+              <AdminIcon name="logout" />
             </button>
-          ))}
-        </nav>
-        <div className="ad-user">
-          <a
-            href="#/"
-            className="ad-link"
-            onClick={(e) => {
-              if (!canLeave()) e.preventDefault()
-            }}
-          >
-            Xem trang <AdminIcon name="external" size={15} />
-          </a>
-          {data?.me && <img src={data.me.avatar_url} alt={data.me.login} title={data.me.login} />}
-          <button
-            type="button"
-            className="ad-icon-btn"
-            disabled={saving}
-            aria-label="Đăng xuất"
-            title="Đăng xuất"
-            onClick={logout}
-          >
-            <AdminIcon name="logout" />
-          </button>
+          </div>
         </div>
       </header>
       <main className="ad-main">
+        <div key={tab} className="ad-page">
+          {data && pageMeta[tab] && (
+            <div className="ad-heading">
+              <h1>{pageMeta[tab][0]}</h1>
+              <p>
+                {tab === 'overview' && data.me
+                  ? `Xin chào ${data.me.login}, đây là tình hình cửa hàng của bạn.`
+                  : pageMeta[tab][1]}
+              </p>
+            </div>
+          )}
         {fatal ? (
           <div className="ad-empty ad-error-box" role="alert">
             <p>{fatal}</p>
@@ -300,7 +324,23 @@ export default function Admin() {
             </button>
           </div>
         ) : !data ? (
-          <p className="ad-empty">Đang tải dữ liệu…</p>
+          <div className="ad-skeletons" role="status" aria-label="Đang tải dữ liệu">
+            <div className="ad-skeleton wide" />
+            <div className="ad-skeleton" />
+            <div className="ad-skeleton" />
+            <div className="ad-skeleton" />
+          </div>
+        ) : tab === 'overview' ? (
+          <OverviewTab
+            products={data.products}
+            categories={data.catalog.categories}
+            onGo={(id) => {
+              if (canLeave()) {
+                setDirty(false)
+                setTab(id)
+              }
+            }}
+          />
         ) : tab === 'products' ? (
           <ProductsTab
             key={revision}
@@ -329,6 +369,7 @@ export default function Admin() {
             onDirtyChange={setDirty}
           />
         )}
+        </div>
       </main>
       {toast && (
         <div className={`ad-toast ${toast.kind}`} role="status">
