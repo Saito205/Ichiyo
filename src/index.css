@@ -745,3 +745,44 @@ a { color: var(--green); }
 @media (prefers-reduced-motion: reduce) {
   .cf-card, .cf-summary { transition-duration: 0.01ms; }
 }
+
+/* ---------- Bộ lọc gọn: nút cài đặt + nút đỏ cho bộ lọc đang bật ---------- */
+.category-picker { display: flex; align-items: flex-end; gap: 10px; flex: 0 1 auto; }
+.filter-more { position: relative; flex: none; }
+.filter-toggle {
+  position: relative; display: grid; place-items: center; width: 49px; height: 49px; padding: 0;
+  border: 1px solid var(--line); border-radius: 50%; background: #fff; color: var(--green);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.filter-toggle:hover { background: var(--mint); }
+.filter-toggle[aria-expanded="true"] { background: var(--green); border-color: var(--green); color: #fff; }
+.filter-toggle-count {
+  position: absolute; top: -5px; right: -5px; min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 999px; background: #c9302c; color: #fff; box-shadow: 0 0 0 2px var(--mist);
+  font-size: 0.72rem; font-weight: 700; line-height: 20px; text-align: center;
+}
+.filter-popover {
+  position: absolute; z-index: 30; top: calc(100% + 12px); right: 0;
+  display: flex; flex-direction: column; gap: 14px;
+  width: min(340px, calc(100vw - 48px)); padding: 18px;
+  border: 1px solid var(--line); border-radius: 18px; background: #fff; box-shadow: var(--shadow);
+  animation: pop 0.18s ease-out;
+}
+.filter-popover-title { font-size: 0.95rem; font-weight: 700; color: var(--forest); }
+.filter-popover .select-field { min-width: 0; flex: none; width: 100%; }
+.filter-done { align-self: flex-end; padding: 9px 22px; }
+
+.active-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0; list-style: none; }
+.filter-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 12px;
+  border: 0; border-radius: 999px; background: #c9302c; color: #fff;
+  font-size: 0.82rem; line-height: 1.5; transition: background 0.15s;
+}
+.filter-chip:hover { background: #a82420; }
+.filter-chip strong { font-weight: 700; }
+.filter-chip svg { flex: none; }
+
+@media (max-width: 700px) {
+  .category-picker { width: 100%; }
+  .category-picker .select-field { flex: 1 1 auto; }
+}

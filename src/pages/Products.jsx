@@ -1,15 +1,23 @@
 import { useRef, useState } from 'react'
+import Icon from '../components/Icon.jsx'
+import ProductCard from '../components/ProductCard.jsx'
+import CatalogFilters from '../components/CatalogFilters.jsx'
 import { products, categories } from '../content.js'
 import { filterProducts, paginate, PAGE_SIZE } from '../lib/catalog.js'
-import ProductCard from '../components/ProductCard.jsx'
-import Icon from '../components/Icon.jsx'
+
+// Dãy số trang: luôn có trang đầu, trang cuối và 1 trang quanh trang hiện tại.
+function pageNumbers(current, total) {
+  const keep = new Set([1, total, current - 1, current, current + 1])
+  const list = [...keep].filter((n) => n >= 1 && n <= total).sort((a, b) => a - b)
+  return list.flatMap((n, i) => (i > 0 && n - list[i - 1] > 1 ? ['…', n] : [n]))
+}
+
 export default function Products({ onOpen }) {
   const [query, setQuery] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [attributes, setAttributes] = useState({})
   const [page, setPage] = useState(1)
   const results = useRef(null)
-  const category = categories.find((c) => c.id === categoryId)
   const filtered = filterProducts(products, { query, categoryId, attributes }, categories)
   const paged = paginate(filtered, page)
   const active = query || categoryId || Object.values(attributes).some(Boolean)
@@ -31,64 +39,25 @@ export default function Products({ onOpen }) {
         <h1>Tất cả sản phẩm</h1>
         <p className="page-intro">Những món đồ nhỏ, dành cho những điều bạn nâng niu.</p>
       </div>
-      <div className="catalog-filters">
-        <div className="filter-top">
-          <label className="search">
-            <Icon name="search" />
-            <input
-              type="search"
-              placeholder="Tìm tên sản phẩm…"
-              aria-label="Tìm sản phẩm"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value)
-                setPage(1)
-              }}
-            />
-          </label>
-          <label className="select-field">
-            <span>Danh mục</span>
-            <select
-              value={categoryId}
-              onChange={(e) => {
-                setCategoryId(e.target.value)
-                setAttributes({})
-                setPage(1)
-              }}
-            >
-              <option value="">Tất cả danh mục</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        {category?.filters.length > 0 && (
-          <div className="category-filters" role="group" aria-label={`Bộ lọc của ${category.name}`}>
-            {category.filters.map((f) => (
-              <label className="select-field" key={f.id}>
-                <span>{f.name}</span>
-                <select
-                  value={attributes[f.id] || ''}
-                  onChange={(e) => {
-                    setAttributes((prev) => ({ ...prev, [f.id]: e.target.value }))
-                    setPage(1)
-                  }}
-                >
-                  <option value="">Tất cả</option>
-                  {f.options.map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
-          </div>
-        )}
-      </div>
+      <CatalogFilters
+        query={query}
+        onQuery={(value) => {
+          setQuery(value)
+          setPage(1)
+        }}
+        categories={categories}
+        categoryId={categoryId}
+        onCategory={(id) => {
+          setCategoryId(id)
+          setAttributes({})
+          setPage(1)
+        }}
+        attributes={attributes}
+        onAttribute={(id, value) => {
+          setAttributes((prev) => ({ ...prev, [id]: value }))
+          setPage(1)
+        }}
+      />
       <div className="results-heading" ref={results} tabIndex={-1}>
         <p className="count" role="status">
           {filtered.length
@@ -111,45 +80,42 @@ export default function Products({ onOpen }) {
       ) : (
         <div className="empty">
           <h2>Chưa tìm thấy sản phẩm</h2>
-          <p>
-            {products.length
-              ? 'Thử từ khóa khác hoặc bỏ bớt bộ lọc nhé.'
-              : 'Tiệm đang chuẩn bị những sản phẩm mới.'}
-          </p>
-          {active && (
-            <button type="button" className="btn" onClick={reset}>
-              Xem tất cả sản phẩm
-            </button>
-          )}
+          <p>Thử từ khóa khác hoặc bỏ bớt bộ lọc nhé.</p>
         </div>
       )}
       {paged.pageCount > 1 && (
-        <nav className="pagination" aria-label="Phân trang sản phẩm">
+        <nav className="pagination" aria-label="Phân trang">
           <button
             type="button"
             disabled={paged.current === 1}
-            onClick={() => goTo(paged.current - 1)}
             aria-label="Trang trước"
+            onClick={() => goTo(paged.current - 1)}
           >
             <Icon name="left" size={18} />
           </button>
-          {Array.from({ length: paged.pageCount }, (_, i) => i + 1).map((n) => (
-            <button
-              type="button"
-              key={n}
-              className={n === paged.current ? 'current' : ''}
-              aria-current={n === paged.current ? 'page' : undefined}
-              aria-label={`Trang ${n}`}
-              onClick={() => goTo(n)}
-            >
-              {n}
-            </button>
-          ))}
+          {pageNumbers(paged.current, paged.pageCount).map((n, i) =>
+            n === '…' ? (
+              <span key={`gap-${i}`} aria-hidden="true">
+                …
+              </span>
+            ) : (
+              <button
+                key={n}
+                type="button"
+                className={n === paged.current ? 'current' : ''}
+                aria-current={n === paged.current ? 'page' : undefined}
+                aria-label={`Trang ${n}`}
+                onClick={() => goTo(n)}
+              >
+                {n}
+              </button>
+            ),
+          )}
           <button
             type="button"
             disabled={paged.current === paged.pageCount}
-            onClick={() => goTo(paged.current + 1)}
             aria-label="Trang sau"
+            onClick={() => goTo(paged.current + 1)}
           >
             <Icon name="right" size={18} />
           </button>
