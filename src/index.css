@@ -786,3 +786,15 @@ a { color: var(--green); }
   .category-picker { width: 100%; }
   .category-picker .select-field { flex: 1 1 auto; }
 }
+
+/* Chừa đủ chỗ cho 4 mục điều hướng và giỏ hàng trên màn hình nhỏ. */
+@media (max-width: 700px) {
+  .header-inner { gap: 6px; }
+  .site-nav { gap: 4px; }
+  .site-nav .nav-item, .header-cart .nav-item { width: 40px; height: 40px; }
+  .header-inner .logo-image { max-width: 100%; object-fit: contain; }
+}
+@media (max-width: 400px) {
+  .header-inner .logo-name { display: none; }
+  .site-nav .nav-item, .header-cart .nav-item { width: 36px; height: 36px; }
+}

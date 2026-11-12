@@ -1,5 +1,8 @@
 import { categoryFor, normalizeCatalog, slugify } from './lib/catalog.js'
 import { normalizeGuide } from './lib/guide.js'
+import { normalizeCurrency } from './lib/currency.js'
+const currencyFiles = import.meta.glob('/content/currency.json', { eager: true })
+export const currency = normalizeCurrency(Object.values(currencyFiles)[0]?.default)
 const siteFiles = import.meta.glob('/content/site.json', { eager: true })
 const productFiles = import.meta.glob('/content/products/*.json', { eager: true })
 const catalogFiles = import.meta.glob('/content/catalog.json', { eager: true })

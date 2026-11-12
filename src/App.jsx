@@ -6,6 +6,7 @@ import GuideContent from './components/GuideContent.jsx'
 import Home from './pages/Home.jsx'
 import Products from './pages/Products.jsx'
 import Cart from './pages/Cart.jsx'
+import Currency from './pages/Currency.jsx'
 import { site, guide } from './content.js'
 const subscribe = (callback) => {
   window.addEventListener('hashchange', callback)
@@ -15,6 +16,7 @@ const getPage = () => {
   const path = window.location.hash.replace(/^#\/?/, '').split(/[/?]/)[0]
   if (path === 'products' || path === 'san-pham') return 'products'
   if (path === 'guide' || path === 'huong-dan') return 'guide'
+  if (path === 'currency' || path === 'doi-tien') return 'currency'
   if (path === 'cart' || path === 'gio-hang') return 'cart'
   return 'home'
 }
@@ -27,6 +29,8 @@ function Page({ page }) {
           <Home onOpen={setSelected} />
         ) : page === 'products' ? (
           <Products onOpen={setSelected} />
+        ) : page === 'currency' ? (
+          <Currency />
         ) : page === 'cart' ? (
           <Cart onOpen={setSelected} />
         ) : (
@@ -49,6 +53,8 @@ export default function App() {
         ? 'Sản phẩm'
         : page === 'guide'
           ? 'Hướng dẫn'
+          : page === 'currency'
+            ? 'Đổi tiền'
           : page === 'cart'
             ? 'Giỏ hàng'
             : 'Home'

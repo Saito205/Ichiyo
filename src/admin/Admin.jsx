@@ -5,6 +5,8 @@ import OverviewTab from './OverviewTab.jsx'
 import ProductsTab from './ProductsTab.jsx'
 import CategoriesTab from './CategoriesTab.jsx'
 import GuideTab from './GuideTab.jsx'
+import CurrencyTab from './CurrencyTab.jsx'
+import { normalizeCurrency, validateCurrency } from '../lib/currency.js'
 import SettingsTab from './SettingsTab.jsx'
 import { clearToken, getToken, login, setToken } from './auth.js'
 import { REPO } from './config.js'
@@ -25,13 +27,14 @@ function uniqueSlug(title, taken) {
   return slug
 }
 async function loadData() {
-  const [repo, me, list, site, rawCatalog, rawGuide] = await Promise.all([
+  const [repo, me, list, site, rawCatalog, rawGuide, rawCurrency] = await Promise.all([
     gh.getRepo(),
     gh.getUser(),
     gh.loadProducts(),
     gh.loadSite(),
     gh.loadCatalog(),
     gh.loadGuide(),
+    gh.loadCurrency(),
   ])
   if (!repo.permissions?.push) throw new Error(`Tài khoản này không có quyền ghi vào ${REPO}.`)
   return {
@@ -40,6 +43,7 @@ async function loadData() {
     site,
     catalog: normalizeCatalog(rawCatalog, list),
     guide: normalizeGuide(rawGuide),
+    currency: normalizeCurrency(rawCurrency),
   }
 }
 const tabs = [
@@ -47,6 +51,7 @@ const tabs = [
   ['products', 'Sản phẩm', 'box'],
   ['categories', 'Danh mục & bộ lọc', 'tag'],
   ['guide', 'Hướng dẫn', 'book'],
+  ['currency', 'Tiền tệ', 'currency'],
   ['settings', 'Cài đặt', 'sliders'],
 ]
 // Tiêu đề lớn của từng trang (Danh mục và Hướng dẫn đã có tiêu đề riêng bên trong).
@@ -225,6 +230,15 @@ export default function Admin() {
       setData((prev) => ({ ...prev, guide: next }))
       saved('Đã lưu hướng dẫn.')
     })
+  const saveCurrency = (next) =>
+    write(async () => {
+      validateCurrency(next)
+      await gh.commitFiles('Cập nhật tiền tệ và công thức quy đổi', [
+        { path: 'content/currency.json', text: toJson(next) },
+      ])
+      setData((prev) => ({ ...prev, currency: next }))
+      saved('Đã lưu tiền tệ.')
+    })
   if (!token)
     return (
       <div className="ad-login">
@@ -358,6 +372,8 @@ export default function Admin() {
             onSave={saveCatalog}
             onDirtyChange={setDirty}
           />
+        ) : tab === 'currency' ? (
+          <CurrencyTab key={revision} config={data.currency} onSave={saveCurrency} onDirtyChange={setDirty} />
         ) : tab === 'guide' ? (
           <GuideTab key={revision} guide={data.guide} onSave={saveGuide} onDirtyChange={setDirty} />
         ) : (
