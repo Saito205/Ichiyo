@@ -6,6 +6,7 @@ const links = [
   ['home', '#/', 'Home'],
   ['products', '#/products', 'Sản phẩm'],
   ['guide', '#/guide', 'Hướng dẫn'],
+  ['currency', '#/currency', 'Đổi tiền'],
 ]
 const cartLink = ['cart', '#/cart', 'Giỏ hàng']
 export default function Header({ page = 'home' }) {

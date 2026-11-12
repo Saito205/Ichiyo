@@ -120,3 +120,12 @@ export async function loadGuide() {
     throw e
   }
 }
+
+export async function loadCurrency() {
+  try {
+    return await readJson('content/currency.json')
+  } catch (e) {
+    if (e.status === 404) return null
+    throw e
+  }
+}

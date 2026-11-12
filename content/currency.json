@@ -1,0 +1,15 @@
+{
+  "title": "Quy đổi tiền tệ",
+  "note": "Đang dùng công thức mẫu để thử chức năng, không phải tỷ giá thị trường. Quản trị viên cần thay bằng công thức riêng trước khi sử dụng thực tế.",
+  "currencies": [
+    {
+      "id": "usd",
+      "code": "USD",
+      "name": "Đô la Mỹ (mẫu)",
+      "enabled": true,
+      "decimals": 2,
+      "fromVnd": "x / 25000",
+      "toVnd": "x * 25000"
+    }
+  ]
+}
