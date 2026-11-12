@@ -1,6 +1,8 @@
 import useUnsavedChanges from './useUnsavedChanges.js'
 import { useState } from 'react'
 import { ImageField } from './ImageField.jsx'
+import ThemeEditor from './ThemeEditor.jsx'
+import { normalizeTheme, validateTheme } from '../lib/theme.js'
 
 const contactFields = [
   ['email', 'Email'],
@@ -12,10 +14,10 @@ const contactFields = [
 ]
 
 export default function SettingsTab({ site, onSave, onError, onDirtyChange }) {
-  const [form, setForm] = useState({ ...site, contact: { ...site.contact } })
+  const [form, setForm] = useState(() => ({ ...site, contact: { ...site.contact }, theme: normalizeTheme(site.theme) }))
   const [busy, setBusy] = useState(false)
   const [baseline, setBaseline] = useState(() =>
-    JSON.stringify({ ...site, contact: { ...site.contact } }),
+    JSON.stringify({ ...site, contact: { ...site.contact }, theme: normalizeTheme(site.theme) }),
   )
   useUnsavedChanges(JSON.stringify(form) !== baseline, onDirtyChange)
 
@@ -35,10 +37,13 @@ export default function SettingsTab({ site, onSave, onError, onDirtyChange }) {
 
   const submit = async (e) => {
     e.preventDefault()
+    if (busy) return
     setBusy(true)
     try {
-      await onSave(form)
-      setBaseline(JSON.stringify(form))
+      const next = { ...form, theme: validateTheme(form.theme) }
+      await onSave(next)
+      setForm(next)
+      setBaseline(JSON.stringify(next))
     } catch (err) {
       onError(err.message)
     }
@@ -78,6 +83,7 @@ export default function SettingsTab({ site, onSave, onError, onDirtyChange }) {
           <span className="ad-label">Nội dung giới thiệu thêm</span>
           <textarea className="ad-input" rows={4} {...text('aboutText')} />
         </label>
+        <ThemeEditor value={form.theme} siteName={form.name} onChange={(theme) => setForm((f) => ({ ...f, theme }))} />
         <h2>Liên hệ</h2>
         <div className="ad-row">
           {contactFields.map(([key, label]) => (

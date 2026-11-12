@@ -1,0 +1,48 @@
+.theme-editor { margin: 30px 0; padding-block: 28px; border-block: 1px solid var(--line); }
+.theme-heading { display: flex; align-items: start; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.theme-heading p { color: var(--muted); font-size: .86rem; margin-top: 8px; max-width: 58ch; }
+.theme-presets { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0; }
+.theme-preset { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: #fff; display: grid; gap: 8px; font-size: .8rem; }
+.theme-preset:hover { border-color: var(--green); }
+.theme-swatches { display: flex; }
+.theme-swatches i { width: 22px; height: 18px; }
+.theme-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.theme-group { margin-bottom: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; }
+.theme-group summary { font-weight: 700; cursor: pointer; margin-bottom: 10px; }
+.theme-color-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 8px; }
+.theme-color-row > label { font-size: .83rem; }
+.theme-color-inputs { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.theme-color-inputs input[type=color] { width: 40px; height: 40px; padding: 3px; border: 1px solid var(--line); border-radius: 7px; background: #fff; cursor: pointer; }
+.theme-color-inputs .theme-hex { width: 100px; min-height: 40px; padding: 8px; font: .85rem ui-monospace, monospace; }
+.theme-hex[aria-invalid=true] { border-color: #b42318; }
+.theme-preview-column { position: sticky; top: 110px; display: grid; gap: 14px; }
+.theme-preview-label { color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: .1em; }
+.theme-sample { background: var(--page-bg); color: var(--text); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.theme-sample-header { padding: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; background: var(--header-bg); color: var(--forest); border-bottom: 1px solid var(--line); }
+.theme-sample-header span { color: var(--green); font-size: .7rem; }
+.theme-sample-body { padding: 22px; }
+.theme-sample-tag { display: inline-block; background: var(--mist); color: var(--green); border: 1px solid var(--line); padding: 5px 8px; font-size: .72rem; }
+.theme-sample h3 { margin: 14px 0 8px; color: var(--forest); font-size: 1.35rem; }
+.theme-sample-body > p { color: var(--muted); font-size: .8rem; }
+.theme-sample-card { display: grid; gap: 8px; margin-block: 18px; padding: 14px; background: var(--white); border: 1px solid var(--line); border-radius: 8px; font-size: .85rem; }
+.theme-sample-card strong { color: var(--forest); }
+.theme-sample-art { display: grid; place-items: center; height: 80px; background: var(--mint); color: var(--leaf); font: 2.5rem Georgia, serif; }
+.theme-sample-price { color: var(--green); font-weight: 700; }
+.theme-sample-button { border: 0; padding: 12px 15px; background: var(--green); color: var(--on-primary); border-radius: 6px; font-size: .8rem; }
+.theme-sample-button:hover { background: var(--primary-hover); }
+.theme-sample-error { background: var(--danger-soft); color: var(--danger); padding: 10px; margin-top: 14px; font-size: .75rem; }
+.theme-sample-footer { background: var(--footer-bg); color: var(--footer-text); padding: 18px; font-size: .75rem; }
+.theme-contrast { font-size: .8rem; color: #874d0d; background: #fff7e5; padding: 12px; border-radius: 6px; }
+.theme-validation { color: #b42318; background: #fff1f0; padding: 12px; margin-top: 16px; }
+.theme-full-preview { margin-top: 24px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.theme-preview-toolbar { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 14px; padding: 14px; background: var(--mist); font-size: .85rem; }
+.theme-preview-toolbar label { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.theme-preview-toolbar select { font: inherit; padding: 8px; background: #fff; color: var(--text); border: 1px solid var(--line); border-radius: 6px; }
+.theme-full-preview iframe { display: block; border: 0; width: 100%; height: 650px; background: #fff; }
+@media (max-width: 900px) {
+  .theme-layout { grid-template-columns: minmax(0, 1fr); }
+  .theme-preview-column { position: static; }
+}
+@media (max-width: 420px) {
+  .theme-color-row { align-items: start; flex-direction: column; gap: 6px; }
+}

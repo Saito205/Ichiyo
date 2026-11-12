@@ -7,6 +7,7 @@ import Home from './pages/Home.jsx'
 import Products from './pages/Products.jsx'
 import Cart from './pages/Cart.jsx'
 import Currency from './pages/Currency.jsx'
+import useStorefrontTheme from './lib/useStorefrontTheme.js'
 import { site, guide } from './content.js'
 const subscribe = (callback) => {
   window.addEventListener('hashchange', callback)
@@ -47,6 +48,7 @@ function Page({ page }) {
 }
 export default function App() {
   const page = useSyncExternalStore(subscribe, getPage)
+  const themeStyle = useStorefrontTheme(site.theme)
   useEffect(() => {
     const label =
       page === 'products'
@@ -62,7 +64,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [page])
   return (
-    <div className="storefront">
+    <div className="storefront" style={themeStyle}>
       <Header page={page} />
       <Page key={page} page={page} />
       <Footer />

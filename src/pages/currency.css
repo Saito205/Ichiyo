@@ -3,21 +3,21 @@
 .fx-eyebrow { color: var(--green); font-size: .75rem; letter-spacing: .13em; font-weight: 700; }
 .fx-heading h1 { color: var(--forest); font-size: clamp(2rem, 4.5vw, 3.2rem); line-height: 1.2; margin: 12px 0 16px; }
 .fx-heading p, .fx-caption { color: var(--muted); }
-.fx-panel { border: 1px solid var(--line); border-top: 4px solid var(--green); border-radius: 12px; padding: clamp(18px, 3vw, 36px); background: #fff; }
+.fx-panel { border: 1px solid var(--line); border-top: 4px solid var(--green); border-radius: 12px; padding: clamp(18px, 3vw, 36px); background: var(--white); }
 .fx-toolbar { display: flex; align-items: end; justify-content: space-between; gap: 20px; padding-bottom: 28px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
 .fx-select-label { display: grid; gap: 8px; font-size: .9rem; font-weight: 600; width: min(100%, 370px); }
-.fx-select-label select { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 6px; font: inherit; background: white; color: var(--text); }
+.fx-select-label select { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 6px; font: inherit; background: var(--white); color: var(--text); }
 .fx-live { display: inline-flex; align-items: center; gap: 8px; color: var(--green); font-size: .8rem; padding-bottom: 12px; white-space: nowrap; }
 .fx-fields { display: grid; grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr); gap: 22px; align-items: center; }
 .fx-field { min-width: 0; }
 .fx-field > label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 10px; }
-.fx-money { display: flex; align-items: center; border: 1px solid #9fb9ab; border-radius: 8px; padding: 16px; gap: 12px; background: #fff; }
+.fx-money { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 16px; gap: 12px; background: var(--white); }
 .fx-money:focus-within { outline: 2px solid var(--green); outline-offset: 2px; }
 .fx-money input { width: 100%; min-width: 0; font: 600 clamp(1.2rem, 2.5vw, 1.8rem)/1.5 'Be Vietnam Pro', system-ui, sans-serif; border: 0; background: transparent; color: var(--forest); padding: 0; outline: none; }
 .fx-unit { flex-shrink: 0; max-width: 125px; overflow-wrap: anywhere; font-size: .9rem; font-weight: 700; color: var(--muted); border-left: 1px solid var(--line); padding-left: 12px; }
 .fx-result .fx-money { background: var(--mist); border-color: var(--line); }
 .fx-caption { display: block; font-size: .8rem; margin-top: 8px; }
-.fx-swap { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--line); border-radius: 50%; background: white; color: var(--green); }
+.fx-swap { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--line); border-radius: 50%; background: var(--white); color: var(--green); }
 .fx-swap:hover { background: var(--mint); }
 .fx-bottom { display: flex; justify-content: space-between; align-items: start; gap: 18px; margin-top: 26px; color: var(--muted); font-size: .8rem; }
 .fx-clear { border: 0; background: none; color: var(--green); text-decoration: underline; white-space: nowrap; padding: 0; }
@@ -25,8 +25,8 @@
 .fx-summary span { padding-inline: 10px; }
 .fx-summary strong { color: var(--green); }
 .fx-rounding { font-size: .75rem; color: var(--muted); margin-top: 16px; }
-.fx-error { color: #b42318; background: #fff1f0; padding: 12px; margin-top: 20px; border-radius: 6px; }
-.fx-invalid { border-color: #b42318; }
+.fx-error { color: var(--danger, #b42318); background: var(--danger-soft, #fff1f0); padding: 12px; margin-top: 20px; border-radius: 6px; }
+.fx-invalid { border-color: var(--danger, #b42318); }
 .fx-note { display: flex; gap: 12px; padding: 20px 0; font-size: .85rem; color: var(--muted); white-space: pre-line; }
 .fx-note svg { flex-shrink: 0; margin-top: 2px; }
 .fx-empty { padding: 30px; border: 1px dashed var(--line); }
