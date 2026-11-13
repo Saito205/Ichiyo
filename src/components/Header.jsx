@@ -5,8 +5,8 @@ import { useCart } from '../lib/cart.js'
 const links = [
   ['home', '#/', 'Home'],
   ['products', '#/products', 'Sản phẩm'],
-  ['guide', '#/guide', 'Hướng dẫn'],
   ['currency', '#/currency', 'Đổi tiền'],
+  ['guide', '#/guide', 'Hướng dẫn'],
 ]
 const cartLink = ['cart', '#/cart', 'Giỏ hàng']
 export default function Header({ page = 'home' }) {
