@@ -809,3 +809,17 @@ a { color: var(--green); }
 .storefront .contacts a:hover { background: rgba(var(--footerText-rgb, 207, 230, 218), .12); }
 .storefront .cf-info { background: var(--footer-bg, var(--forest)); color: var(--footer-text, #cfe6da); }
 .storefront .cf-cat, .storefront .cf-summary { color: var(--footer-text, #cfe6da); }
+
+
+/* Ảnh trang chủ nằm trực tiếp trên nền */
+.storefront .hero-img {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
+
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
