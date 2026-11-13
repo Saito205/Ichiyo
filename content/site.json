@@ -7,12 +7,33 @@
     "instagram": "",
     "address": "305E Nguyễn Văn Linh, Ninh Kiều, Cần Thơ"
   },
-  "heroImage": "",
+  "heroImage": "/uploads/background-eji99l.webp",
   "heroText": "Với đa dạng mẫu mã từ các đồ gói cơ bản đến các set đồ gói brand siêu xinh iu, Ichiyo mong rằng sẽ có thể trở thành một chỗ dừng chân cho các tình iu cần vận chuyển nhanh gọn và tiện lợi ạa (⁠人⁠*⁠´⁠∀⁠｀⁠)⁠｡⁠*ﾟ⁠+",
   "name": "Tiệm tạp hoá Ichiyo",
   "aboutTitle": "",
   "tagline": "Chiếc tiệm bán đồ gói nho nhỏ tại Cần Thơ",
   "aboutText": "",
   "footer": "© Tiệm Tạp Hóa Ichiyo",
-  "heroTitle": "Chào mừng đến với Tạp Hóa Ichiyo (⁠*⁠´⁠ω⁠｀⁠*⁠)"
+  "heroTitle": "Chào mừng đến với Tạp Hóa Ichiyo (⁠*⁠´⁠ω⁠｀⁠*⁠)",
+  "theme": {
+    "primary": "#15804f",
+    "accent": "#1e9e63",
+    "primaryHover": "#0e3b2c",
+    "onPrimary": "#ffffff",
+    "background": "#ffffff",
+    "surface": "#ffffff",
+    "soft": "#f3faf6",
+    "tint": "#e2f4ea",
+    "border": "#d9eadf",
+    "heading": "#0e3b2c",
+    "text": "#17302a",
+    "muted": "#587064",
+    "header": "#ffffff",
+    "footer": "#0e3b2c",
+    "footerText": "#cfe6da",
+    "danger": "#b42318",
+    "dangerSoft": "#fef3f2",
+    "onDanger": "#ffffff"
+  },
+  "logo": "/uploads/logo1-uoj0gj.webp"
 }
