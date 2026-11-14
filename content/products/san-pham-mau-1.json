@@ -2,27 +2,30 @@
   "title": "Bìa lạnh trắng 74*105mm dày 1,5cm",
   "category": "Bộ sưu tập A",
   "summary": "",
-  "description": "",
-  "cover": "/uploads/11863-wnzljl.webp",
+  "description": "BÌA LẠNH BẢO VỆ CARD – CỨNG CÁP, CHẮC CHẮN\n\nBìa lạnh trắng giúp cố định và hạn chế cong gập photocard trong quá trình đóng gói, vận chuyển.\n\nThông tin sản phẩm:\n- Kích thước: 74 × 105 mm\n- Độ dày: 1,5 mm\n- Màu sắc: Trắng",
+  "cover": "/uploads/image-2026-11-14-192634198-asnpkt.webp",
   "gallery": [
-    "/uploads/11864-7uh31l.webp",
-    "/uploads/11865-5pwjjm.webp"
+    "/uploads/image-2026-11-14-192642832-j4odl3.webp",
+    "/uploads/image-2026-11-14-192656383-yuhzkb.webp"
   ],
   "link": "",
   "featured": true,
-  "order": 1,
+  "order": 0,
   "categoryId": "bo-suu-tap-a",
-  "attributes": {
-    "filter-caadd9a6-331a-47e0-9f93-bbc9117e3d1e": "Trắng"
-  },
-  "price": 25000,
+  "attributes": {},
+  "price": 4000,
   "createdAt": "",
-  "updatedAt": "2026-11-05T18:13:13.919Z",
+  "updatedAt": "2026-11-14T12:34:10.257Z",
   "variants": [
     {
       "id": "vmw3v5wiear5f",
-      "label": "1 cặp",
-      "price": 25000
+      "label": "2 cặp",
+      "price": 4000
+    },
+    {
+      "id": "vmwgdxudav48b",
+      "label": "10 cặp",
+      "price": 15000
     }
   ]
 }
