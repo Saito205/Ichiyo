@@ -2,7 +2,7 @@
   "categories": [
     {
       "id": "bo-suu-tap-a",
-      "name": "Bộ sưu tập A",
+      "name": "Bìa lạnh",
       "filters": [
         {
           "id": "filter-caadd9a6-331a-47e0-9f93-bbc9117e3d1e",
@@ -15,7 +15,7 @@
     },
     {
       "id": "bo-suu-tap-b",
-      "name": "Bộ sưu tập B",
+      "name": "Set gói",
       "filters": []
     }
   ]
