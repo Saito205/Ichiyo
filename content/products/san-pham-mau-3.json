@@ -1,13 +1,41 @@
 {
-  "title": "Sản phẩm mẫu 3",
-  "category": "Set gói",
-  "summary": "Mô tả ngắn gọn về sản phẩm mẫu số 3.",
-  "description": "Mô tả chi tiết của sản phẩm mẫu số 3.",
-  "cover": "",
-  "gallery": [],
+  "title": "Sleeve Singba 65*91",
+  "category": "Sleeve",
+  "summary": "Sleeve Singba size 65*91 phù hợp các loại polaroid.",
+  "description": "Singba là một trong các hãng đáp ứng đủ tiêu chỉ ngon, bổ, rẻ khi nhắc đến sleeve với hơn trăm nghìn lượt bán ở thị trường trung! Với độ dày 2mm và vô cùng mềm mướt, tiệm tin rằng sleeve nhà Singba sẽ là một lựa chọn phù hợp cho các tình iu để bảo vệ những chiếc card dấu iu của mình 𖹭",
+  "cover": "/uploads/image-2026-11-19-211410554-ccz3hh.webp",
+  "gallery": [
+    "/uploads/image-2026-11-19-211416809-0fm0oo.webp",
+    "/uploads/image-2026-11-19-211424144-fn7nat.webp"
+  ],
   "link": "",
-  "featured": false,
+  "featured": true,
   "order": 3,
-  "categoryId": "bo-suu-tap-b",
-  "attributes": {}
+  "categoryId": "cat-2fe20bd7-8932-4876-b15e-a6a4023f588c",
+  "attributes": {},
+  "price": 16000,
+  "variants": [
+    {
+      "id": "vmwnmr79jhutv",
+      "label": "1 pack trong suốt có dán",
+      "price": 18000
+    },
+    {
+      "id": "vmwnmr7tlfaxq",
+      "label": "1 pack trong suốt không dán",
+      "price": 16000
+    },
+    {
+      "id": "vmwnmr86g8rvy",
+      "label": "1 pack cát mịn không dán",
+      "price": 16000
+    },
+    {
+      "id": "vmwnmr8jmg5bp",
+      "label": "1 pack nhám không dán",
+      "price": 16000
+    }
+  ],
+  "createdAt": "",
+  "updatedAt": "2026-11-19T14:14:26.895Z"
 }
