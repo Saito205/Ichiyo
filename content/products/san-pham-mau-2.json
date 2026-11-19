@@ -1,13 +1,41 @@
 {
-  "title": "Sản phẩm mẫu 2",
-  "category": "Bìa lạnh",
-  "summary": "Mô tả ngắn gọn về sản phẩm mẫu số 2.",
-  "description": "Mô tả chi tiết của sản phẩm mẫu số 2.",
-  "cover": "",
-  "gallery": [],
+  "title": "Sleeve Singba 58*88",
+  "category": "",
+  "summary": "Sleeve Singba size 58x88 phù hợp các loại card bo góc.",
+  "description": "Singba là một trong các hãng đáp ứng đủ tiêu chỉ ngon, bổ, rẻ khi nhắc đến sleeve với hơn trăm nghìn lượt bán ở thị trường trung! Với độ dày 2mm và vô cùng mềm mướt, tiệm tin rằng sleeve nhà Singba sẽ là một lựa chọn phù hợp cho các tình iu để bảo vệ những chiếc card dấu iu của mình 𖹭",
+  "cover": "/uploads/image-2026-11-19-211010288-tylrdz.webp",
+  "gallery": [
+    "/uploads/image-2026-11-19-211015610-62vqt8.webp",
+    "/uploads/image-2026-11-19-211041645-0qqni2.webp"
+  ],
   "link": "",
   "featured": true,
   "order": 2,
-  "categoryId": "bo-suu-tap-a",
-  "attributes": {}
+  "categoryId": "",
+  "attributes": {},
+  "price": 16000,
+  "variants": [
+    {
+      "id": "vmwnmkb4wsnt0",
+      "label": "1 pack trong suốt có dán",
+      "price": 18000
+    },
+    {
+      "id": "vmwnmki7omagr",
+      "label": "1 pack trong suốt không dán",
+      "price": 16000
+    },
+    {
+      "id": "vmwnmkm0xjtpq",
+      "label": "1 pack cát mịn không dán",
+      "price": 16000
+    },
+    {
+      "id": "vmwnmkq81xfa7",
+      "label": "1 pack nhám không dán",
+      "price": 16000
+    }
+  ],
+  "createdAt": "",
+  "updatedAt": "2026-11-19T14:12:24.474Z"
 }
