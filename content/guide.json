@@ -1,0 +1,27 @@
+{
+  "title": "Hướng dẫn mua hàng",
+  "intro": "Chọn món bạn thích, Ichiyo sẽ cùng bạn chuẩn bị một đơn hàng thật vừa ý.",
+  "steps": [
+    {
+      "id": "chon-san-pham",
+      "title": "Chọn sản phẩm",
+      "body": "Vào trang Sản phẩm để tìm món phù hợp. Bấm vào sản phẩm để xem ảnh và mô tả chi tiết, các tình iu thích món nào cứ bấm cho vào giỏ hàng nhé!"
+    },
+    {
+      "id": "lien-he",
+      "title": "Liên hệ với Ichiyo",
+      "body": "Sau khi đã cho hết các món cần mua vào giỏ hàng. Tình yêu hãy cap màn hình giỏ hàng để gửi qua FB/Tiktok/IG của tiệm."
+    },
+    {
+      "id": "xac-nhan",
+      "title": "Xác nhận đơn hàng",
+      "body": "Tiệm sẽ xác nhận giá và tiến hành trao đổi thông tin nhận hàng, phí vận chuyển và phương thức thanh toán cũng như kiểm tra lại các thông tin trước khi xác nhận đơn."
+    },
+    {
+      "id": "nhan-hang",
+      "title": "Nhận hàng",
+      "body": "Hãy quay video kiểm tra sản phẩm khi nhận hàng. Nếu cần hỗ trợ, hãy liên hệ lại với Ichiyo và gửi thông tin đơn hàng và video unbox nhé!"
+    }
+  ],
+  "note": "Phí vận chuyển và thời gian giao hàng được shop xác nhận khi bạn đặt hàng."
+}
