@@ -1,6 +1,6 @@
 {
   "title": "Sleeve Singba 58*88",
-  "category": "",
+  "category": "Sleeve",
   "summary": "Sleeve Singba size 58x88 phù hợp các loại card bo góc.",
   "description": "Singba là một trong các hãng đáp ứng đủ tiêu chỉ ngon, bổ, rẻ khi nhắc đến sleeve với hơn trăm nghìn lượt bán ở thị trường trung! Với độ dày 2mm và vô cùng mềm mướt, tiệm tin rằng sleeve nhà Singba sẽ là một lựa chọn phù hợp cho các tình iu để bảo vệ những chiếc card dấu iu của mình 𖹭",
   "cover": "/uploads/image-2026-11-19-211010288-tylrdz.webp",
@@ -11,7 +11,7 @@
   "link": "",
   "featured": true,
   "order": 2,
-  "categoryId": "",
+  "categoryId": "cat-2fe20bd7-8932-4876-b15e-a6a4023f588c",
   "attributes": {},
   "price": 16000,
   "variants": [
@@ -37,5 +37,5 @@
     }
   ],
   "createdAt": "",
-  "updatedAt": "2026-11-19T14:12:24.474Z"
+  "updatedAt": "2026-11-19T14:19:17.764Z"
 }
