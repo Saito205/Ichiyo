@@ -9,13 +9,13 @@
     "/uploads/image-2026-11-14-192656383-yuhzkb.webp"
   ],
   "link": "",
-  "featured": false,
+  "featured": true,
   "order": 0,
   "categoryId": "bo-suu-tap-a",
   "attributes": {},
   "price": 4000,
   "createdAt": "",
-  "updatedAt": "2026-11-24T04:05:53.554Z",
+  "updatedAt": "2026-11-24T04:06:20.621Z",
   "variants": [
     {
       "id": "vmw3v5wiear5f",
