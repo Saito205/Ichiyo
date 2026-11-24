@@ -1,0 +1,31 @@
+{
+  "title": "Toploader A7 có seal",
+  "price": 15000,
+  "variants": [
+    {
+      "id": "vmwu67izpgzwt",
+      "label": "10 cặp",
+      "price": 15000
+    },
+    {
+      "id": "vmwu67mvwwvai",
+      "label": "30 cặp",
+      "price": 36000
+    }
+  ],
+  "categoryId": "cat-2fe20bd7-8932-4876-b15e-a6a4023f588c",
+  "category": "Sleeve & Toploader",
+  "attributes": {},
+  "summary": "",
+  "description": "",
+  "cover": "/uploads/image-2026-11-24-105625874-vjjv7f.webp",
+  "gallery": [
+    "/uploads/image-2026-11-24-105631296-hti2ds.webp",
+    "/uploads/image-2026-11-24-105644310-t365mn.webp"
+  ],
+  "link": "",
+  "featured": false,
+  "order": 5,
+  "createdAt": "2026-11-24T04:05:11.775Z",
+  "updatedAt": "2026-11-24T04:05:11.775Z"
+}
