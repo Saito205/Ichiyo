@@ -1,0 +1,37 @@
+{
+  "title": "Túi giấy chấm bi kích thước 11x20cm 3 màu",
+  "price": 7000,
+  "variants": [
+    {
+      "id": "vmwu860z2btzt",
+      "label": "10 túi chấm bi trắng",
+      "price": 7000
+    },
+    {
+      "id": "vmwu8699pv96u",
+      "label": "10 túi chấm bi hồng",
+      "price": 7000
+    },
+    {
+      "id": "vmwu86ct8bqka",
+      "label": "10 túi chấm bi xanh",
+      "price": 7000
+    }
+  ],
+  "categoryId": "cat-4b17ca2b-ae8a-41a8-951b-fab2ae2a51cd",
+  "category": "Túi các loại",
+  "attributes": {},
+  "summary": "",
+  "description": "",
+  "cover": "/uploads/image-2026-11-24-115835698-xj32pd.webp",
+  "gallery": [
+    "/uploads/image-2026-11-24-115841047-ir3ur3.webp",
+    "/uploads/image-2026-11-24-115845147-8l8bwl.webp",
+    "/uploads/image-2026-11-24-115849403-ud4av7.webp"
+  ],
+  "link": "",
+  "featured": false,
+  "order": 8,
+  "createdAt": "2026-11-24T05:01:29.217Z",
+  "updatedAt": "2026-11-24T05:01:29.217Z"
+}
