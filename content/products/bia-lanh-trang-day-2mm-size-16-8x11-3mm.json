@@ -1,0 +1,31 @@
+{
+  "title": "Bìa lạnh trắng dày 2mm size 16,8x11,3mm",
+  "price": 5000,
+  "variants": [
+    {
+      "id": "vmwu5i23yetxi",
+      "label": "1 cặp",
+      "price": 5000
+    },
+    {
+      "id": "vmwu5i6nctclo",
+      "label": "10 cặp",
+      "price": 40000
+    }
+  ],
+  "categoryId": "bo-suu-tap-a",
+  "category": "Bìa lạnh",
+  "attributes": {},
+  "summary": "",
+  "description": "",
+  "cover": "/uploads/1795490670719-564093595419572640-5505442-zl3gl9.webp",
+  "gallery": [
+    "/uploads/image-2026-11-24-102743872-hj5fka.webp",
+    "/uploads/1795490670920-564093595419572640-5505442-gvta8e.webp"
+  ],
+  "link": "",
+  "featured": false,
+  "order": 4,
+  "createdAt": "2026-11-24T03:49:10.463Z",
+  "updatedAt": "2026-11-24T03:49:10.463Z"
+}
