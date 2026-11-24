@@ -1,0 +1,26 @@
+{
+  "title": "Sleeve shikishi 125*140mm",
+  "price": 25000,
+  "variants": [
+    {
+      "id": "vmwuh9v23aoch",
+      "label": "1 pack 20 cái",
+      "price": 25000
+    }
+  ],
+  "categoryId": "cat-2fe20bd7-8932-4876-b15e-a6a4023f588c",
+  "category": "Sleeve & Toploader",
+  "attributes": {},
+  "summary": "",
+  "description": "",
+  "cover": "/uploads/image-2026-11-24-161431437-n9rjz9.webp",
+  "gallery": [
+    "/uploads/image-2026-11-24-161436771-kjj0wr.webp",
+    "/uploads/image-2026-11-24-161440921-brmgyw.webp"
+  ],
+  "link": "",
+  "featured": false,
+  "order": 15,
+  "createdAt": "2026-11-24T09:14:44.399Z",
+  "updatedAt": "2026-11-24T09:14:44.399Z"
+}
