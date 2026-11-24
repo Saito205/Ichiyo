@@ -9,7 +9,7 @@
     "/uploads/image-2026-11-19-211424144-fn7nat.webp"
   ],
   "link": "",
-  "featured": true,
+  "featured": false,
   "order": 3,
   "categoryId": "cat-2fe20bd7-8932-4876-b15e-a6a4023f588c",
   "attributes": {},
@@ -37,5 +37,5 @@
     }
   ],
   "createdAt": "",
-  "updatedAt": "2026-11-24T03:17:36.999Z"
+  "updatedAt": "2026-11-24T04:06:10.893Z"
 }
