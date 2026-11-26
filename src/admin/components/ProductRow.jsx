@@ -25,6 +25,9 @@ export default function ProductRow({ product, className, onClick, children }) {
       </span>
       {data.variants?.length > 0 && <span className="ad-tag soft">{data.variants.length} phân loại</span>}
       {data.featured && <span className="ad-tag">Nổi bật</span>}
+      {(data.soldOut || (data.variants?.length > 0 && data.variants.every((v) => v.soldOut))) && (
+        <span className="ad-tag sold-out">Hết hàng</span>
+      )}
       {children}
     </button>
   )

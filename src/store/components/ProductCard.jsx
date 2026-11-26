@@ -1,7 +1,7 @@
-import { hasVariants, priceRangeLabel } from '../../shared/price.js'
+import { hasVariants, isFullySoldOut, priceRangeLabel } from '../../shared/price.js'
 import { useCart } from '../cart.js'
 import Icon from './Icon.jsx'
-import ProductImage, { FeaturedBadge } from './ProductImage.jsx'
+import ProductImage, { FeaturedBadge, SoldOutBadge } from './ProductImage.jsx'
 import QtyStepper from './QtyStepper.jsx'
 
 // Nút giỏ hàng ở góc thẻ:
@@ -27,6 +27,7 @@ function CardCartButton({ product, onOpen }) {
   }
 
   const qty = getQuantity(slug)
+  const soldOut = isFullySoldOut(product)
   if (qty > 0) {
     return (
       <QtyStepper
@@ -39,7 +40,7 @@ function CardCartButton({ product, onOpen }) {
           label: qty === 1 ? `Xóa ${title} khỏi giỏ` : `Giảm số lượng ${title}`,
           title: qty === 1 ? 'Xóa khỏi giỏ' : 'Giảm số lượng',
         }}
-        plus={{ label: `Tăng số lượng ${title}`, title: 'Tăng số lượng' }}
+        plus={{ label: `Tăng số lượng ${title}`, title: soldOut ? 'Hết hàng' : 'Tăng số lượng', disabled: soldOut }}
       />
     )
   }
@@ -47,8 +48,9 @@ function CardCartButton({ product, onOpen }) {
     <button
       type="button"
       className="card-cart"
-      aria-label={`Thêm ${title} vào giỏ`}
-      title="Thêm vào giỏ"
+      aria-label={soldOut ? `${title} đã hết hàng` : `Thêm ${title} vào giỏ`}
+      title={soldOut ? 'Hết hàng' : 'Thêm vào giỏ'}
+      disabled={soldOut}
       onClick={() => add(slug, 1)}
     >
       <Icon name="cart" size={20} />
@@ -58,8 +60,9 @@ function CardCartButton({ product, onOpen }) {
 
 export default function ProductCard({ product, onOpen }) {
   const priceLabel = priceRangeLabel(product)
+  const soldOut = isFullySoldOut(product)
   return (
-    <article className="card">
+    <article className={`card ${soldOut ? 'sold-out' : ''}`}>
       <button
         type="button"
         className="card-open"
@@ -67,8 +70,8 @@ export default function ProductCard({ product, onOpen }) {
         aria-label={`Xem chi tiết ${product.title}`}
       >
         <div className="card-media">
-          <ProductImage src={product.cover} loading="lazy" />
-          {product.featured && <FeaturedBadge />}
+          <ProductImage src={product.cover} thumb loading="lazy" />
+          {soldOut ? <SoldOutBadge /> : product.featured && <FeaturedBadge />}
         </div>
         <div className="card-body">
           {product.category && <span className="card-cat">{product.category}</span>}

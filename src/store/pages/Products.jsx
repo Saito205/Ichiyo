@@ -1,18 +1,18 @@
 import { useRef, useState } from 'react'
-import { PAGE_SIZE, filterProducts, paginate } from '../../shared/catalog.js'
+import { PAGE_SIZE, SORTS, filterProducts, paginate } from '../../shared/catalog.js'
 import { categories, products } from '../../shared/content.js'
 import CatalogFilters from '../components/CatalogFilters.jsx'
 import Icon from '../components/Icon.jsx'
 import Pagination from '../components/Pagination.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 
-const noFilters = { query: '', categoryId: '', attributes: {} }
+const noFilters = { query: '', categoryId: '', attributes: {}, sort: 'newest' }
 
 export default function Products({ onOpen }) {
   const [filters, setFilters] = useState(noFilters)
   const [page, setPage] = useState(1)
   const results = useRef(null)
-  const { query, categoryId, attributes } = filters
+  const { query, categoryId, attributes, sort } = filters
   const filtered = filterProducts(products, filters, categories)
   const paged = paginate(filtered, page)
   const active = query || categoryId || Object.values(attributes).some(Boolean)
@@ -52,16 +52,24 @@ export default function Products({ onOpen }) {
         <p className="count" role="status">
           {filtered.length ? `${first}–${last} / ${filtered.length} sản phẩm` : '0 sản phẩm'}
         </p>
-        {active && (
-          <button
-            type="button"
-            className="reset-filters"
-            onClick={() => updateFilters(() => noFilters)}
-          >
-            <Icon name="close" size={16} />
-            Xóa bộ lọc
-          </button>
-        )}
+        <div className="results-tools">
+          {active && (
+            <button type="button" className="reset-filters" onClick={() => updateFilters(() => noFilters)}>
+              <Icon name="close" size={16} />
+              Xóa bộ lọc
+            </button>
+          )}
+          <label className="sort-field">
+            <span>Sắp xếp</span>
+            <select value={sort} onChange={(e) => updateFilters(() => ({ sort: e.target.value }))}>
+              {SORTS.map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
       </div>
       {paged.items.length ? (
         <div className="product-grid">

@@ -14,3 +14,10 @@ export function routeFromHash(hash) {
   const path = hash.replace(/^#\/?/, '').split(/[/?]/)[0]
   return routes.find((r) => r.paths.includes(path)) || routes[0]
 }
+
+// Link riêng của sản phẩm: "#/products/<mã sản phẩm>" (mở sẵn cửa sổ chi tiết).
+export const productHref = (slug) => `#/products/${encodeURIComponent(slug)}`
+export function productSlugFromHash(hash) {
+  const [path, slug] = hash.replace(/^#\/?/, '').split('?')[0].split('/')
+  return (path === 'products' || path === 'san-pham') && slug ? decodeURIComponent(slug) : ''
+}

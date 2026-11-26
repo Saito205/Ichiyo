@@ -26,6 +26,7 @@ export default function QtyStepper({ value, label, onMinus, onPlus, minus = {}, 
         className={cls.btn}
         aria-label={plus.label}
         title={plus.title}
+        disabled={plus.disabled}
         onClick={onPlus}
       >
         <Icon name="plus" size={16} />

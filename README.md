@@ -5,7 +5,7 @@ Nội dung (sản phẩm, ảnh, thông tin) được lưu thành file trong th�
 ngay trong repo → không bao giờ mất khi thoát trình duyệt.
 
 ## Cách hoạt động
-1. Vào `https://saito205.github.io/T-p-h-a-Ichiyo/admin/` (tự chuyển tới `#/admin`) → đăng nhập GitHub.
+1. Vào `https://saito205.github.io/Ichiyo/admin/` (tự chuyển tới `#/admin`) → đăng nhập GitHub.
 2. Thêm / sửa / xoá sản phẩm, danh mục, hướng dẫn, tiền tệ, cài đặt → bấm **Lưu** → trang quản trị tạo 1 commit vào nhánh `main`.
 3. GitHub Actions tự build và deploy lại (khoảng 1–2 phút) → web cập nhật.
 
@@ -20,7 +20,7 @@ git push
 
 ### 2. Bật GitHub Pages
 Repo → **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-Sau khi workflow chạy xong, web nằm ở `https://saito205.github.io/T-p-h-a-Ichiyo/`.
+Sau khi workflow chạy xong, web nằm ở `https://saito205.github.io/Ichiyo/`.
 (Repo cần ở chế độ **Public** nếu dùng gói GitHub miễn phí.)
 
 ### 3. Tạo cổng đăng nhập GitHub (miễn phí)
@@ -28,7 +28,7 @@ GitHub Pages chỉ là hosting tĩnh nên không tự xử lý được đăng n
 Cần 1 Cloudflare Worker nhỏ làm "OAuth proxy":
 
 1. GitHub → **Settings → Developer settings → OAuth Apps → New OAuth App**
-   - Homepage URL: `https://saito205.github.io/T-p-h-a-Ichiyo/`
+   - Homepage URL: `https://saito205.github.io/Ichiyo/`
    - Authorization callback URL: `https://<ten-worker>.<tai-khoan>.workers.dev/callback`
    - Lưu lại **Client ID** và tạo **Client Secret**.
 2. Clone & deploy https://github.com/sterlingwes/decap-proxy lên Cloudflare Workers (tài khoản Cloudflare miễn phí):
@@ -44,6 +44,13 @@ Cần 1 Cloudflare Worker nhỏ làm "OAuth proxy":
 3. Mở `src/admin/api/config.js`, sửa `PROXY_URL` thành địa chỉ Worker của bạn (và `REPO` / `BRANCH` nếu đổi), rồi commit + push.
 
 Xong! Vào `/admin/` để quản lý nội dung.
+
+## Tính năng cho khách
+- Tìm kiếm không dấu, lọc theo danh mục / bộ lọc, sắp xếp (mới nhất, giá, tên).
+- Mỗi sản phẩm có link riêng: `…/#/products/<mã-sản-phẩm>` (nút “Sao chép link” trong cửa sổ chi tiết).
+- Bấm ảnh lớn để xem toàn màn hình: vuốt đổi ảnh, chạm để phóng to.
+- Giỏ hàng: nút “Sao chép đơn hàng” và “Chép & nhắn Facebook/Zalo/…” (hiện khi đã điền link ở Cài đặt).
+- Sản phẩm / phân loại “Hết hàng” (tick trong trang quản trị): vẫn xem được nhưng không thêm vào giỏ.
 
 ## Chạy thử trên máy
 ```bash
@@ -63,6 +70,8 @@ content/                     NỘI DUNG (trang quản trị sửa các file này
   products/*.json            mỗi sản phẩm 1 file
 public/uploads/              ảnh tải lên từ trang quản trị
 public/admin/index.html      chuyển /admin/ sang #/admin
+public/generated/            ảnh thu nhỏ, biểu tượng, ảnh chia sẻ — TỰ TẠO lúc dev/build, không commit
+scripts/content-assets.js    tạo public/generated/ + thẻ chia sẻ (Open Graph) trong index.html
 
 src/
   main.jsx, Root.jsx         điểm khởi động; Root chọn Cửa hàng hay Quản trị theo URL

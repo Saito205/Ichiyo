@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { priceRangeLabel } from '../../shared/price.js'
+import { isFullySoldOut, priceRangeLabel } from '../../shared/price.js'
 import Icon from './Icon.jsx'
-import ProductImage, { FeaturedBadge } from './ProductImage.jsx'
+import ProductImage, { FeaturedBadge, SoldOutBadge } from './ProductImage.jsx'
 
 const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n))
 
@@ -177,9 +177,9 @@ export default function ProductCarousel({ products, onOpen }) {
                   onClick={() => handleCard(i, p)}
                 >
                   <span className="cf-media">
-                    <ProductImage src={p.cover} draggable={false} />
+                    <ProductImage src={p.cover} thumb draggable={false} />
                   </span>
-                  {p.featured && <FeaturedBadge />}
+                  {isFullySoldOut(p) ? <SoldOutBadge /> : p.featured && <FeaturedBadge />}
                   <span className="cf-info">
                     {p.category && <span className="cf-cat">{p.category}</span>}
                     <span className="cf-title">{p.title}</span>
@@ -208,7 +208,7 @@ export default function ProductCarousel({ products, onOpen }) {
               onClick={() => onOpen(current)}
             >
               <span className="cf-thumb">
-                <ProductImage src={current.cover} draggable={false} placeholderClass={null} />
+                <ProductImage src={current.cover} thumb draggable={false} placeholderClass={null} />
               </span>
               <span className="cf-now-text">
                 <strong>{current.title}</strong>

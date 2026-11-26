@@ -1,4 +1,5 @@
 // Danh mục, bộ lọc và các hàm lọc / sắp xếp / phân trang sản phẩm.
+import { isFullySoldOut, lowestPrice } from './price.js'
 import { searchText, slugify, uniqueId } from './text.js'
 
 export const PAGE_SIZE = 20
@@ -93,14 +94,37 @@ export function newestFirst(a, b) {
     String(a.title).localeCompare(String(b.title), 'vi')
   )
 }
+// Món hết hàng luôn xếp sau món còn hàng.
+const inStockFirst = (a, b) => Number(isFullySoldOut(a)) - Number(isFullySoldOut(b))
+
+// Các cách sắp xếp trên trang Sản phẩm. Sản phẩm không có giá (Liên hệ) luôn nằm cuối khi xếp theo giá.
+export const SORTS = [
+  ['newest', 'Mới nhất'],
+  ['price-asc', 'Giá thấp → cao'],
+  ['price-desc', 'Giá cao → thấp'],
+  ['name', 'Tên A → Z'],
+]
+const byPrice = (dir) => (a, b) => {
+  const x = lowestPrice(a)
+  const y = lowestPrice(b)
+  if (x === null || y === null) return (x === null) - (y === null)
+  return (x - y) * dir
+}
+const sorters = {
+  newest: newestFirst,
+  'price-asc': byPrice(1),
+  'price-desc': byPrice(-1),
+  name: (a, b) => String(a.title).localeCompare(String(b.title), 'vi'),
+}
+
 export function homeProducts(products) {
   return [...products]
-    .sort((a, b) => Number(!!b.featured) - Number(!!a.featured) || newestFirst(a, b))
+    .sort((a, b) => inStockFirst(a, b) || Number(!!b.featured) - Number(!!a.featured) || newestFirst(a, b))
     .slice(0, 10)
 }
 export function filterProducts(
   products,
-  { query = '', categoryId = '', attributes = {} } = {},
+  { query = '', categoryId = '', attributes = {}, sort = 'newest' } = {},
   categories = [],
 ) {
   const keyword = searchText(query)
@@ -120,7 +144,7 @@ export function filterProducts(
         )
       )
     })
-    .sort(newestFirst)
+    .sort((a, b) => inStockFirst(a, b) || (sorters[sort] || newestFirst)(a, b) || newestFirst(a, b))
 }
 export function paginate(items, page, size = PAGE_SIZE) {
   const pageCount = Math.max(1, Math.ceil(items.length / size))

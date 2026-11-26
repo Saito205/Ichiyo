@@ -17,6 +17,7 @@ const emptyProduct = (order) => ({
   gallery: [],
   link: '',
   featured: false,
+  soldOut: false,
   order,
 })
 

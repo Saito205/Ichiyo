@@ -52,3 +52,19 @@
   .cart-footer { flex-direction: column-reverse; align-items: stretch; }
   .cart-total { justify-content: space-between; }
 }
+
+/* Gửi đơn: sao chép đơn hàng dạng chữ + mở khung chat của tiệm */
+.send-order {
+  display: grid; gap: 16px; margin-top: 24px; padding: 24px;
+  border: 1px solid var(--line); border-radius: 20px; background: var(--mist);
+}
+.send-order-text h2 { font-size: 1.15rem; color: var(--forest); }
+.send-order-text p { margin-top: 6px; color: var(--muted); font-size: .92rem; }
+.send-order-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.send-order-status { min-height: 1.4em; color: var(--green); font-weight: 600; font-size: .9rem; }
+.send-order-status:empty { display: none; }
+@media (max-width: 700px) {
+  .send-order { padding: 18px; }
+  .send-order-actions .btn { flex: 1 1 100%; justify-content: center; }
+}
+.cart-sold-out { align-self: flex-start; padding: 2px 10px; border-radius: 999px; background: var(--danger-soft, #fef3f2); color: var(--danger, #b42318); font-size: .8rem; font-weight: 700; }

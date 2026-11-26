@@ -1,12 +1,13 @@
 import { products } from '../../shared/content.js'
-import { findVariant, formatPrice, unitPriceOf } from '../../shared/price.js'
+import { findVariant, formatPrice, isSoldOut, unitPriceOf } from '../../shared/price.js'
 import { useCart } from '../cart.js'
 import Icon from '../components/Icon.jsx'
 import ProductImage from '../components/ProductImage.jsx'
 import QtyStepper from '../components/QtyStepper.jsx'
+import SendOrder from '../components/SendOrder.jsx'
 
 function CartItem({ item, index, onOpen, onMinus, onPlus, onRemove }) {
-  const { variant, quantity, unitPrice } = item
+  const { variant, quantity, unitPrice, soldOut } = item
   const priceLabel = variant ? formatPrice(unitPrice) : formatPrice(item.price)
   const name = variant ? `${item.title} (${variant.label})` : item.title
 
@@ -21,7 +22,7 @@ function CartItem({ item, index, onOpen, onMinus, onPlus, onRemove }) {
         onClick={() => onOpen(item)}
         aria-label={`Xem chi tiết ${item.title}`}
       >
-        <ProductImage src={item.cover} />
+        <ProductImage src={item.cover} thumb />
       </button>
       <div className="cart-info">
         {item.category && <span className="card-cat">{item.category}</span>}
@@ -31,6 +32,7 @@ function CartItem({ item, index, onOpen, onMinus, onPlus, onRemove }) {
             Phân loại: <strong>{variant.label}</strong>
           </span>
         )}
+        {soldOut && <span className="cart-sold-out">Hết hàng</span>}
         {priceLabel && (
           <div className="cart-item-price">
             <span>{priceLabel}</span>
@@ -55,7 +57,7 @@ function CartItem({ item, index, onOpen, onMinus, onPlus, onRemove }) {
             label: quantity === 1 ? `Xóa ${name} khỏi giỏ` : `Giảm số lượng ${name}`,
             title: quantity === 1 ? 'Xóa khỏi giỏ' : 'Giảm số lượng',
           }}
-          plus={{ label: `Tăng số lượng ${name}`, title: 'Tăng số lượng' }}
+          plus={{ label: `Tăng số lượng ${name}`, title: soldOut ? 'Hết hàng' : 'Tăng số lượng', disabled: soldOut }}
         />
         <button
           type="button"
@@ -79,7 +81,14 @@ export default function Cart({ onOpen }) {
       const product = products.find((p) => p.slug === slug)
       if (!product) return null
       const variant = findVariant(product, variantId)
-      return { ...product, quantity, variantId, variant, unitPrice: unitPriceOf(product, variantId) }
+      return {
+        ...product,
+        quantity,
+        variantId,
+        variant,
+        unitPrice: unitPriceOf(product, variantId),
+        soldOut: isSoldOut(product, variantId),
+      }
     })
     .filter(Boolean)
   const totalPrice = items.reduce((sum, p) => sum + p.unitPrice * p.quantity, 0)
@@ -90,7 +99,7 @@ export default function Cart({ onOpen }) {
         <span className="eyebrow">Danh sách muốn mua</span>
         <h1>Giỏ hàng</h1>
         <p className="page-intro">
-          Chọn những món bạn thích, chỉnh số lượng, rồi chụp màn hình trang này gửi cho shop một lượt nhé.
+          Chọn những món bạn thích, chỉnh số lượng, rồi bấm “Sao chép đơn hàng” để gửi cho tiệm một lượt nhé.
         </p>
       </div>
 
@@ -142,6 +151,7 @@ export default function Cart({ onOpen }) {
               </div>
             )}
           </div>
+          <SendOrder items={items} count={count} totalPrice={totalPrice} />
         </>
       )}
     </section>

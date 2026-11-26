@@ -19,6 +19,7 @@ const toForm = (data, categories) => ({
     id: v.id || newVariantId(),
     label: v.label ?? '',
     price: v.price ?? '',
+    soldOut: !!v.soldOut,
   })),
 })
 
@@ -26,7 +27,7 @@ const toForm = (data, categories) => ({
 // Trả về danh sách đã làm sạch, hoặc ném lỗi để hiện cho người dùng.
 function cleanVariants(variants) {
   const rows = variants
-    .map((v) => ({ id: v.id, label: String(v.label).trim(), price: String(v.price ?? '').trim() }))
+    .map((v) => ({ id: v.id, label: String(v.label).trim(), price: String(v.price ?? '').trim(), soldOut: !!v.soldOut }))
     .filter((v) => v.label || v.price)
   for (const v of rows) {
     if (!v.label) throw new Error('Hãy nhập tên cho tất cả phân loại.')
@@ -35,7 +36,7 @@ function cleanVariants(variants) {
   }
   const labels = rows.map((v) => searchText(v.label))
   if (new Set(labels).size !== labels.length) throw new Error('Tên các phân loại bị trùng nhau.')
-  return rows.map((v) => ({ id: v.id, label: v.label, price: toPriceNumber(v.price) }))
+  return rows.map((v) => ({ id: v.id, label: v.label, price: toPriceNumber(v.price), soldOut: v.soldOut }))
 }
 
 // Giá chung: số nếu chỉ gồm chữ số (cho phép dấu . , cách), còn lại giữ nguyên chữ (vd "Liên hệ").
@@ -77,6 +78,14 @@ function VariantsEditor({ variants, onChange }) {
                   onChange={(e) => setVariant(v.id, { price: e.target.value })}
                 />
               </label>
+              <label className="ad-check variant-sold-out" title="Phân loại này tạm hết hàng">
+                <input
+                  type="checkbox"
+                  checked={!!v.soldOut}
+                  onChange={(e) => setVariant(v.id, { soldOut: e.target.checked })}
+                />
+                Hết hàng
+              </label>
               <button
                 type="button"
                 className="ad-icon-btn variant-remove"
@@ -93,7 +102,7 @@ function VariantsEditor({ variants, onChange }) {
       <button
         type="button"
         className="ad-btn ghost"
-        onClick={() => onChange([...variants, { id: newVariantId(), label: '', price: '' }])}
+        onClick={() => onChange([...variants, { id: newVariantId(), label: '', price: '', soldOut: false }])}
       >
         <AdminIcon name="plus" /> Thêm phân loại
       </button>
@@ -188,6 +197,7 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
         gallery: form.gallery || [],
         link,
         featured: !!form.featured,
+        soldOut: !!form.soldOut,
         order: Number(form.order) || 0,
       }),
     )
@@ -302,6 +312,14 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
                 onChange={(e) => set('featured')(e.target.checked)}
               />
               Đánh dấu nổi bật
+            </label>
+            <label className="ad-check">
+              <input
+                type="checkbox"
+                checked={!!form.soldOut}
+                onChange={(e) => set('soldOut')(e.target.checked)}
+              />
+              Hết hàng (khách vẫn xem được nhưng không thêm vào giỏ được)
             </label>
           </div>
 

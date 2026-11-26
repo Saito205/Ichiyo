@@ -18,18 +18,18 @@ export function formatPrice(value) {
   return ''
 }
 
-// Phân loại của sản phẩm: [{ id, label, price }]. Không có thì sản phẩm chỉ có 1 loại, 1 giá.
+// Phân loại của sản phẩm: [{ id, label, price, soldOut }]. Không có thì sản phẩm chỉ có 1 loại, 1 giá.
 export function normalizeVariants(raw) {
   const taken = new Set()
   return (Array.isArray(raw) ? raw : [])
-    .map((v) => ({ id: String(v?.id || '').trim(), label: String(v?.label || '').trim(), price: v?.price }))
+    .map((v) => ({ id: String(v?.id || '').trim(), label: String(v?.label || '').trim(), price: v?.price, soldOut: !!v?.soldOut }))
     .filter((v) => v.label)
     .map((v) => {
       const base = v.id || slugify(v.label)
       let id = base
       for (let n = 2; taken.has(id); n++) id = `${base}-${n}`
       taken.add(id)
-      return { id, label: v.label, price: parsePrice(v.price) }
+      return { id, label: v.label, price: parsePrice(v.price), soldOut: v.soldOut }
     })
 }
 
@@ -52,4 +52,20 @@ export function priceRangeLabel(product) {
   const min = Math.min(...prices)
   const max = Math.max(...prices)
   return min === max ? formatPrice(min) : `${formatPrice(min)} – ${formatPrice(max)}`
+}
+
+// Hết hàng: cả sản phẩm được đánh dấu, hoặc phân loại đang chọn hết hàng.
+export function isSoldOut(product, variantId = '') {
+  if (product?.soldOut) return true
+  return hasVariants(product) ? !!findVariant(product, variantId)?.soldOut : false
+}
+// Không còn mua được loại nào (dùng cho nhãn "Hết hàng" trên thẻ sản phẩm).
+export const isFullySoldOut = (product) =>
+  !!product?.soldOut || (hasVariants(product) && product.variants.every((v) => v.soldOut))
+
+// Giá thấp nhất để sắp xếp; sản phẩm không có giá trả về null.
+export function lowestPrice(product) {
+  const prices = hasVariants(product) ? product.variants.map((v) => v.price) : [parsePrice(product?.price)]
+  const valid = prices.filter((n) => n > 0)
+  return valid.length ? Math.min(...valid) : null
 }

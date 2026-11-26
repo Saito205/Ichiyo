@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 /nbproject/private/
+
+# Ảnh phụ tạo tự động lúc build (scripts/content-assets.js)
+/public/generated/

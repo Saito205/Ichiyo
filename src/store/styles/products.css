@@ -127,3 +127,17 @@
   .card-qty-btn { width: 28px; height: 28px; }
   .card-qty-value { min-width: 22px; font-size: 0.82rem; }
 }
+
+/* Sắp xếp (bên phải dòng đếm số sản phẩm) */
+.results-tools { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 8px 18px; }
+.sort-field { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: .85rem; font-weight: 600; }
+.sort-field select {
+  padding: 8px 30px 8px 12px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--white); color: var(--text); font: inherit; font-weight: 600; cursor: pointer;
+}
+
+/* Hết hàng: ảnh nhạt đi + nhãn xám; nút giỏ bị khóa */
+.badge-sold-out { background: var(--forest); color: var(--white); }
+.card.sold-out .card-media img { filter: grayscale(.85); opacity: .7; }
+.card-cart:disabled { opacity: .45; cursor: not-allowed; transform: none; background: var(--white); }
+.card-qty-btn:disabled { opacity: .35; cursor: not-allowed; background: var(--mist); color: var(--green); }

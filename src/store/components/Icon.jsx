@@ -67,6 +67,19 @@ const paths = {
     </>
   ),
   close: <path d="M6 6l12 12M18 6 6 18" />,
+  copy: (
+    <>
+      <rect x="9" y="9" width="11" height="11" rx="2" />
+      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+    </>
+  ),
+  link: <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" />,
+  zoom: (
+    <>
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5M11 8v6M8 11h6" />
+    </>
+  ),
   filter: (
     <>
       <path d="M4 7h9M17 7h3M4 17h3M11 17h9" />

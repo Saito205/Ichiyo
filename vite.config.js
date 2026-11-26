@@ -1,5 +1,9 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import contentAssets from './scripts/content-assets.js'
+
+// Địa chỉ web thật (dùng cho link ảnh khi chia sẻ lên Facebook / Zalo). Đổi nếu dùng tên miền riêng.
+const SITE_URL = 'https://saito205.github.io/Ichiyo/'
 
 // Chính sách bảo mật nội dung (CSP): trình duyệt chỉ chạy script của chính website,
 // chỉ gọi API GitHub, chỉ tải font Google. Chặn mã lạ nếu có nội dung độc hại lọt vào.
@@ -29,5 +33,5 @@ const cspPlugin = {
 // (https://user.github.io/ten-repo/) hoặc tên miền riêng.
 export default defineConfig({
   base: './',
-  plugins: [react(), cspPlugin],
+  plugins: [react(), cspPlugin, contentAssets({ siteUrl: SITE_URL })],
 })

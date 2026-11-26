@@ -18,4 +18,9 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
+  // Script chạy lúc build bằng Node.js
+  {
+    files: ['scripts/**/*.js', 'vite.config.js'],
+    languageOptions: { globals: globals.node },
+  },
 ])
