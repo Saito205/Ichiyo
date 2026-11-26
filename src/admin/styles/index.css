@@ -1,0 +1,4 @@
+/* Giao diện trang quản trị (dùng biến màu của store/styles/base.css). */
+@import './admin.css';
+@import './currency.css';
+@import './theme-editor.css';

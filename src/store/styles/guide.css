@@ -1,0 +1,16 @@
+/* Trang hướng dẫn mua hàng (cũng dùng trong phần xem trước của trang quản trị). */
+.guide-steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.guide-step { display: flex; align-items: flex-start; gap: 22px; padding: 30px; border: 1px solid var(--line); border-radius: 22px; background: var(--mist); }
+.step-number { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--green); color: var(--on-primary, #fff); font-size: 1.15rem; font-weight: 700; }
+.guide-step h2 { font-size: 1.15rem; color: var(--forest); margin: 0 0 10px; }
+.guide-step p, .guide-note p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.guide-step p { color: var(--muted); font-size: .95rem; }
+.guide-note { display: flex; gap: 14px; align-items: flex-start; padding: 22px 26px; margin-top: 26px; border: 1px solid var(--line); border-radius: 18px; color: var(--forest); }
+.guide-note svg { flex: none; margin-top: 3px; }
+
+@media (max-width: 950px) {
+  .guide-step { padding: 22px; gap: 16px; }
+}
+@media (max-width: 700px) {
+  .guide-steps { grid-template-columns: 1fr; }
+}

@@ -6,7 +6,7 @@
       "id": "usd",
       "code": "USD",
       "name": "Đô la Mỹ (mẫu)",
-      "enabled": true,
+      "enabled": false,
       "decimals": 2,
       "fromVnd": "x / 25000",
       "toVnd": "x * 25000"

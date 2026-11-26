@@ -1,0 +1,12 @@
+/* Giao diện cửa hàng (trang quản trị cũng dùng base.css cho biến màu & reset).
+   Thứ tự file có ý nghĩa: file sau được phép ghi đè file trước. */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+@import './base.css';
+@import './header.css';
+@import './footer.css';
+@import './home.css';
+@import './products.css';
+@import './product-modal.css';
+@import './cart.css';
+@import './guide.css';
+@import './currency.css';

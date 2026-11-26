@@ -1,0 +1,126 @@
+/* Thanh đầu trang: logo bên trái — các trang ở giữa (chỉ icon) — giỏ hàng bên phải. */
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center;
+  min-height: 88px;
+  background: var(--header-bg, #fff);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center; justify-content: space-between; gap: 24px; padding-block: 12px;
+}
+
+/* ---------- Logo ---------- */
+.logo {
+  display: inline-flex; align-items: center; gap: 10px;
+  justify-self: start; min-width: 0; max-width: 100%;
+  text-decoration: none; color: var(--forest);
+}
+.logo-mark {
+  flex: none; display: grid; place-items: center; width: 38px; height: 38px;
+  border-radius: 12px; color: var(--on-primary, #fff); font-size: 1.25rem; font-family: Georgia, serif;
+  background: linear-gradient(140deg, var(--leaf), var(--forest));
+}
+.logo-name { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; }
+.logo-image { width: auto; max-width: min(320px, 40vw); max-height: 52px; object-fit: contain; }
+
+/* ---------- Nút tròn chỉ có icon (các trang + giỏ hàng) ---------- */
+.site-nav { position: relative; justify-self: center; flex: none; display: flex; align-items: flex-start; gap: clamp(14px, 3.5vw, 44px); }
+/* Mỗi mục: vòng tròn icon + nhãn chữ bên dưới (dễ hiểu trên điện thoại, nơi không có chú thích khi rê chuột). */
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0;
+  color: var(--muted); font-size: .74rem; font-weight: 600; line-height: 1.2; text-decoration: none;
+  transition: color .2s ease;
+}
+.nav-icon {
+  position: relative; z-index: 1;
+  display: grid; place-items: center; justify-content: center;
+  width: 56px; height: 56px; border-radius: 50%;
+  transition: color .25s ease .1s, background .2s ease, border-color .2s ease;
+}
+.nav-icon svg {
+  width: 24px; height: 24px;
+  transition: translate .35s cubic-bezier(.3, 1.6, .5, 1), scale .35s cubic-bezier(.3, 1.6, .5, 1);
+}
+.nav-label { white-space: nowrap; }
+.site-nav .nav-item:hover, .site-nav .nav-item.active { color: var(--green); }
+.site-nav .nav-item:hover .nav-icon { background: var(--mist); }
+.site-nav .nav-item.active .nav-icon { color: var(--on-primary, #fff); background: transparent; }
+.site-nav .nav-item.active svg { translate: 0 -3px; scale: 1.1; }
+
+/* Giỏ hàng: nút tròn riêng; đang ở trang giỏ thì tô màu chủ đạo */
+.header-cart { justify-self: end; align-self: start; display: flex; }
+.header-cart .nav-icon {
+  background: var(--white); border: 1px solid var(--line);
+  box-shadow: 0 12px 28px -18px rgba(var(--heading-rgb, 14, 59, 44), 0.55);
+}
+.header-cart .nav-item:hover .nav-icon { color: var(--green); background: var(--mist); }
+.header-cart .nav-item.active .nav-icon { color: var(--on-primary, #fff); background: var(--green); border-color: var(--green); }
+.header-cart .nav-item.active svg { scale: 1.08; }
+.nav-badge {
+  position: absolute; top: -4px; right: -4px;
+  min-width: 18px; height: 18px; padding: 0 5px; box-sizing: content-box;
+  border: 2px solid var(--white); border-radius: 999px;
+  background: var(--green); color: var(--on-primary, #fff);
+  font-size: .68rem; font-weight: 700; line-height: 18px; text-align: center;
+}
+
+/* ---------- Bong bóng tròn chạy tới nút được chọn ---------- */
+.nav-bubble {
+  position: absolute; z-index: 0; top: 0; left: 0; right: 100%; height: 56px;
+  border-radius: 999px; pointer-events: none;
+  background: linear-gradient(140deg, var(--leaf), var(--green));
+  box-shadow: 0 14px 24px -10px rgba(var(--primary-rgb, 21, 128, 79), 0.85);
+  translate: 0 -3px; /* nhô lên nhẹ */
+  opacity: 1;
+}
+.nav-bubble[data-hidden="true"] { opacity: 0; }
+.nav-bubble[data-ready="true"] { transition: opacity .2s ease; }
+/* Mép đầu chạy trước, mép sau đuổi theo => bong bóng bị kéo giãn rồi co lại thành tròn */
+.nav-bubble[data-ready="true"][data-dir="right"] {
+  transition: right .28s cubic-bezier(.3, .9, .3, 1) 0s, left .46s cubic-bezier(.3, .9, .3, 1) .09s, opacity .2s ease;
+}
+.nav-bubble[data-ready="true"][data-dir="left"] {
+  transition: left .28s cubic-bezier(.3, .9, .3, 1) 0s, right .46s cubic-bezier(.3, .9, .3, 1) .09s, opacity .2s ease;
+}
+.nav-bubble.go { animation: bubble-squish .65s ease; }
+@keyframes bubble-squish {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.1, .86); }
+  60% { transform: scale(.95, 1.1); }
+  82% { transform: scale(1.02, .98); }
+  100% { transform: scale(1); }
+}
+/* Vòng sóng lan ra khi bong bóng tới nơi */
+.nav-bubble::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  border: 2px solid rgba(var(--accent-rgb, 34, 181, 124), 0.55); opacity: 0;
+}
+.nav-bubble.go::after { animation: bubble-ring .7s .28s ease-out; }
+@keyframes bubble-ring {
+  0% { opacity: .75; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.55); }
+}
+
+/* Màn hình nhỏ: chừa đủ chỗ cho 4 mục điều hướng và giỏ hàng. */
+@media (max-width: 700px) {
+  .site-header { min-height: 78px; }
+  .header-inner { grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px; padding-block: 9px; }
+  .logo { gap: 8px; }
+  .logo-mark { width: 32px; height: 32px; border-radius: 10px; }
+  .logo-name { font-size: .92rem; line-height: 1.3; max-width: 140px; }
+  .logo-image { max-width: 100%; max-height: 45px; }
+  .site-nav { grid-column: 2; justify-self: end; gap: 6px; }
+  .header-cart { grid-column: 3; }
+  .nav-item { font-size: .62rem; }
+  .nav-icon { width: 40px; height: 40px; }
+  .nav-icon svg { width: 22px; height: 22px; }
+}
+@media (max-width: 400px) {
+  .logo-name { display: none; }
+  .site-nav { gap: 7px; }
+  .nav-item { font-size: .58rem; }
+  .nav-icon { width: 36px; height: 36px; }
+}

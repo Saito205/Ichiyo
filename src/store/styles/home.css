@@ -1,0 +1,156 @@
+/* Trang chủ: ảnh bìa, carousel sản phẩm nổi bật, giới thiệu, lời mời xem hướng dẫn. */
+
+/* ---------- Ảnh bìa ---------- */
+.hero { background: var(--mist); border-radius: 0 0 36px 36px; padding: clamp(40px, 5vw, 80px) 0; overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: clamp(30px, 6vw, 100px); align-items: center; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px 6px 12px; margin-bottom: 20px;
+  background: var(--white); border: 1px solid var(--line); border-radius: 999px;
+  color: var(--green); font-size: 0.9rem; font-weight: 600;
+}
+.hero h1 {
+  max-width: 20ch; font-size: clamp(2rem, 4vw, 4.4rem); font-weight: 800;
+  line-height: 1.12; letter-spacing: -0.025em; color: var(--forest);
+  text-wrap: balance;
+}
+.hero-text { margin: 18px 0 30px; max-width: 66ch; font-size: clamp(.98rem, 1.2vw, 1.15rem); color: var(--muted); }
+.hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 20px 28px; }
+/* Ảnh trang chủ nằm trực tiếp trên nền */
+.hero-img { width: 100%; height: auto; max-height: 450px; object-fit: contain; }
+/* Hình minh họa khi chưa có ảnh trang chủ */
+.art { position: relative; width: min(100%, 440px); aspect-ratio: 1; justify-self: center; border-radius: 50%; background: var(--mint); }
+.leaf { position: absolute; border-radius: 0 100% 0 100%; }
+.leaf.a { inset: 8% 30% 34% 6%; background: linear-gradient(140deg, var(--leaf), var(--forest)); }
+.leaf.b { inset: 40% 6% 8% 34%; background: var(--white); box-shadow: var(--shadow); }
+.art-mark {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: Georgia, serif; font-size: clamp(5rem, 14vw, 7.5rem); color: var(--green); mix-blend-mode: multiply;
+}
+
+/* ---------- Tiêu đề khu vực ---------- */
+.home-products { padding: 54px 0 32px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 0 26px; }
+.section-head h2, .shopping-help h2, .about-section h2 { font-size: clamp(1.4rem, 2.3vw, 2rem); color: var(--forest); letter-spacing: -.02em; }
+.section-head h2 { font-weight: 800; }
+.section-subtitle { margin-top: 8px; color: var(--muted); font-size: .92rem; }
+.carousel-actions { display: flex; align-items: center; gap: 10px; flex: none; }
+.carousel-actions .text-link { margin-right: 12px; }
+
+/* ---------- Carousel 3D (kính mờ, thẻ giữa nổi lên) ---------- */
+.cf-stage {
+  position: relative; overflow: hidden; margin-top: 8px;
+  border: 1px solid var(--line); border-radius: 36px;
+  background:
+    radial-gradient(60% 55% at 50% 100%, rgba(var(--accent-rgb, 30, 158, 99), 0.2), transparent 72%),
+    linear-gradient(180deg, var(--mist), var(--mint));
+}
+.cf-viewport {
+  position: absolute; inset: 0 0 86px 0;
+  perspective: 1200px; perspective-origin: 50% 45%;
+  touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none;
+}
+.cf-viewport.is-dragging { cursor: grabbing; }
+.cf-viewport::after {
+  content: ''; position: absolute; left: 50%; bottom: 8px; z-index: 0;
+  width: calc(var(--card-w) * 0.85); height: 28px; transform: translateX(-50%);
+  border-radius: 50%; background: radial-gradient(ellipse at center, rgba(var(--heading-rgb, 14, 59, 44), 0.3), transparent 70%);
+  pointer-events: none;
+}
+.cf-card {
+  position: absolute; top: 40px; left: 50%;
+  width: var(--card-w); height: var(--card-h); margin-left: calc(var(--card-w) / -2);
+  padding: 0; overflow: hidden; text-align: left; color: var(--on-primary, #fff); cursor: pointer;
+  border: 1px solid rgba(var(--surface-rgb, 255, 255, 255), 0.8); border-radius: 28px; background: var(--mint);
+  box-shadow: 0 22px 40px -22px rgba(var(--heading-rgb, 14, 59, 44), 0.55);
+  transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.28, 1), opacity 0.45s ease, box-shadow 0.45s ease;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+.cf-card.is-active { box-shadow: 0 38px 64px -26px rgba(var(--heading-rgb, 14, 59, 44), 0.75), 0 0 0 1px rgba(var(--surface-rgb, 255, 255, 255), 0.9); }
+.cf-viewport.is-dragging .cf-card { transition: none; cursor: grabbing; }
+.cf-media { position: absolute; inset: 0; }
+.cf-media img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.cf-card .badge { z-index: 1; background: rgba(var(--surface-rgb, 255, 255, 255), 0.78); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.cf-info {
+  position: absolute; left: 12px; right: 12px; bottom: 12px;
+  display: flex; flex-direction: column; gap: 3px; padding: 14px 16px 16px;
+  border: 1px solid rgba(var(--surface-rgb, 255, 255, 255), 0.35); border-radius: 20px;
+  background: var(--footer-bg, var(--forest)); color: var(--footer-text, #cfe6da);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+}
+.cf-cat { font-size: 0.78rem; font-weight: 600; color: var(--footer-text, #cfe6da); }
+.cf-title {
+  font-size: 1.05rem; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cf-price { font-size: 0.95rem; font-weight: 700; }
+.cf-summary {
+  max-height: 0; margin-top: 0; overflow: hidden; opacity: 0;
+  font-size: 0.84rem; line-height: 1.45; color: var(--footer-text, #cfe6da);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  transition: max-height 0.5s ease, opacity 0.4s ease, margin-top 0.4s ease;
+}
+.cf-card.is-active .cf-summary { max-height: 3em; margin-top: 4px; opacity: 1; }
+
+/* Thanh điều khiển dưới carousel */
+.cf-bar {
+  position: absolute; left: 50%; bottom: 20px; z-index: 200; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 6px; max-width: calc(100% - 24px); padding: 6px;
+  border: 1px solid rgba(var(--surface-rgb, 255, 255, 255), 0.85); border-radius: 999px;
+  background: rgba(var(--surface-rgb, 255, 255, 255), 0.62);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  box-shadow: 0 14px 30px -16px rgba(var(--heading-rgb, 14, 59, 44), 0.5);
+}
+.cf-nav {
+  display: grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0;
+  border: 0; border-radius: 50%; background: rgba(var(--surface-rgb, 255, 255, 255), 0.75); color: var(--green);
+}
+.cf-nav:hover:not(:disabled) { background: var(--mint); }
+.cf-nav:disabled { opacity: 0.35; cursor: default; }
+.cf-now {
+  display: flex; align-items: center; gap: 10px; min-width: 0; max-width: 300px;
+  padding: 4px 16px 4px 4px; border: 0; border-radius: 999px; background: none; text-align: left;
+}
+.cf-now:hover { background: rgba(var(--surface-rgb, 255, 255, 255), 0.6); }
+.cf-thumb {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px; overflow: hidden;
+  border-radius: 50%; background: var(--mint); color: var(--leaf); font-family: Georgia, serif;
+}
+.cf-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cf-now-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.cf-now-text strong { font-size: 0.9rem; color: var(--forest); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cf-now-text small { font-size: 0.76rem; color: var(--muted); }
+.cf-sr { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Giới thiệu & hướng dẫn nhanh ---------- */
+.about-section { display: grid; grid-template-columns: 1fr 2fr; gap: 36px; padding-block: 36px; border-top: 1px solid var(--line); }
+.about-section p { margin-bottom: 12px; color: var(--muted); white-space: pre-line; }
+.shopping-help { display: flex; align-items: center; justify-content: space-between; gap: 32px; background: var(--mist); border: 1px solid var(--line); border-radius: 24px; padding: 32px; margin-top: 22px; margin-bottom: 60px; }
+.shopping-help p { color: var(--muted); margin-top: 8px; }
+.shopping-help .btn { flex: none; }
+
+@media (max-width: 950px) {
+  .hero-grid { gap: 28px; }
+  .shopping-help { align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 700px) {
+  .hero { padding: 34px 0; border-radius: 0 0 24px 24px; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-tag { font-size: .75rem; }
+  .hero h1 { max-width: 24ch; }
+  .hero-img { max-height: 260px; }
+  .art { width: 210px; }
+  .home-products { padding-top: 36px; }
+  .section-head { align-items: flex-start; flex-direction: column; gap: 18px; }
+  .carousel-actions { width: 100%; }
+  .carousel-actions .text-link { margin-right: auto; }
+  .cf-stage { border-radius: 28px; }
+  .cf-info { left: 8px; right: 8px; bottom: 8px; padding: 10px 12px 12px; border-radius: 16px; }
+  .cf-title { font-size: 0.95rem; }
+  .cf-summary { display: none; }
+  .cf-now { max-width: 46vw; }
+  .about-section { grid-template-columns: 1fr; gap: 16px; }
+  .shopping-help { padding: 24px; margin-bottom: 40px; }
+  .shopping-help .btn { font-size: .88rem; padding: 12px 20px; }
+}

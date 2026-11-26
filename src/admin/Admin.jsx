@@ -1,65 +1,39 @@
 import { useEffect, useRef, useState } from 'react'
-import './admin.css'
-import AdminIcon from './AdminIcon.jsx'
-import OverviewTab from './OverviewTab.jsx'
-import ProductsTab from './ProductsTab.jsx'
-import CategoriesTab from './CategoriesTab.jsx'
-import GuideTab from './GuideTab.jsx'
-import CurrencyTab from './CurrencyTab.jsx'
-import { normalizeCurrency, validateCurrency } from '../lib/currency.js'
-import SettingsTab from './SettingsTab.jsx'
-import { clearToken, getToken, login, setToken } from './auth.js'
-import { REPO } from './config.js'
-import * as gh from './github.js'
-import { markUploaded, slugify, takeUploads } from './media.js'
-import { normalizeCatalog, planCatalogUpdate } from '../lib/catalog.js'
-import { normalizeGuide } from '../lib/guide.js'
-import { site as publishedSite } from '../content.js'
-const toJson = (o) => JSON.stringify(o, null, 2) + '\n'
-const sortProducts = (list) =>
-  [...list].sort(
-    (a, b) => (a.data.order ?? 0) - (b.data.order ?? 0) || a.data.title.localeCompare(b.data.title),
-  )
-function uniqueSlug(title, taken) {
-  const base = slugify(title)
-  let slug = base
-  for (let n = 2; taken.includes(slug); n++) slug = `${base}-${n}`
-  return slug
-}
-async function loadData() {
-  const [repo, me, list, site, rawCatalog, rawGuide, rawCurrency] = await Promise.all([
-    gh.getRepo(),
-    gh.getUser(),
-    gh.loadProducts(),
-    gh.loadSite(),
-    gh.loadCatalog(),
-    gh.loadGuide(),
-    gh.loadCurrency(),
-  ])
-  if (!repo.permissions?.push) throw new Error(`Tài khoản này không có quyền ghi vào ${REPO}.`)
-  return {
-    me,
-    products: sortProducts(list),
-    site,
-    catalog: normalizeCatalog(rawCatalog, list),
-    guide: normalizeGuide(rawGuide),
-    currency: normalizeCurrency(rawCurrency),
-  }
-}
+import { site as publishedSite } from '../shared/content.js'
+import AdminTopBar from './AdminTopBar.jsx'
+import LoginScreen from './LoginScreen.jsx'
+import { clearToken, getToken, login, setToken } from './api/auth.js'
+import * as gh from './api/github.js'
+import './styles/index.css'
+import CategoriesTab from './tabs/CategoriesTab.jsx'
+import CurrencyTab from './tabs/CurrencyTab.jsx'
+import GuideTab from './tabs/GuideTab.jsx'
+import OverviewTab from './tabs/OverviewTab.jsx'
+import ProductsTab from './tabs/ProductsTab.jsx'
+import SettingsTab from './tabs/SettingsTab.jsx'
+import { loadData, useAdminActions } from './useAdminData.js'
+
+// heading: tiêu đề lớn phía trên tab (Danh mục, Hướng dẫn, Tiền tệ đã có tiêu đề riêng bên trong).
 const tabs = [
-  ['overview', 'Tổng quan', 'home'],
-  ['products', 'Sản phẩm', 'box'],
-  ['categories', 'Danh mục & bộ lọc', 'tag'],
-  ['guide', 'Hướng dẫn', 'book'],
-  ['currency', 'Tiền tệ', 'currency'],
-  ['settings', 'Cài đặt', 'sliders'],
+  { id: 'overview', label: 'Tổng quan', icon: 'home', heading: ['Tổng quan', 'Số liệu nhanh về cửa hàng của bạn.'] },
+  { id: 'products', label: 'Sản phẩm', icon: 'box', heading: ['Sản phẩm', 'Thêm, chỉnh sửa và quản lý toàn bộ sản phẩm.'] },
+  { id: 'categories', label: 'Danh mục & bộ lọc', icon: 'tag' },
+  { id: 'guide', label: 'Hướng dẫn', icon: 'book' },
+  { id: 'currency', label: 'Tiền tệ', icon: 'currency' },
+  { id: 'settings', label: 'Cài đặt', icon: 'sliders', heading: ['Cài đặt', 'Thông tin chung và liên hệ hiển thị trên website.'] },
 ]
-// Tiêu đề lớn của từng trang (Danh mục và Hướng dẫn đã có tiêu đề riêng bên trong).
-const pageMeta = {
-  overview: ['Tổng quan', 'Số liệu nhanh về cửa hàng của bạn.'],
-  products: ['Sản phẩm', 'Thêm, chỉnh sửa và quản lý toàn bộ sản phẩm.'],
-  settings: ['Cài đặt', 'Thông tin chung và liên hệ hiển thị trên website.'],
+
+function Skeletons() {
+  return (
+    <div className="ad-skeletons" role="status" aria-label="Đang tải dữ liệu">
+      <div className="ad-skeleton wide" />
+      <div className="ad-skeleton" />
+      <div className="ad-skeleton" />
+      <div className="ad-skeleton" />
+    </div>
+  )
 }
+
 export default function Admin() {
   const [token, setTokenState] = useState(getToken)
   const [loginError, setLoginError] = useState('')
@@ -67,10 +41,20 @@ export default function Admin() {
   const [data, setData] = useState(null)
   const [tab, setTab] = useState('overview')
   const [toast, setToast] = useState(null)
-  const [dirty, setDirty] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [revision, setRevision] = useState(0)
+  const [dirty, setDirty] = useState(false) // tab hiện tại có thay đổi chưa lưu
+  const [revision, setRevision] = useState(0) // tăng khi tải lại => các tab tạo lại form
   const timer = useRef(0)
+
+  const notify = (text, kind = 'ok') => {
+    clearTimeout(timer.current)
+    setToast({ text, kind })
+    timer.current = setTimeout(() => setToast(null), 9000)
+  }
+  const actions = useAdminActions(data, setData, (message) =>
+    notify(`${message} Website sẽ cập nhật sau khi quá trình triển khai hoàn tất.`),
+  )
+  const { saving } = actions
+
   useEffect(() => {
     document.title = 'Quản trị'
     return () => {
@@ -78,6 +62,8 @@ export default function Admin() {
       clearTimeout(timer.current)
     }
   }, [])
+
+  // Có token thì tải dữ liệu; token hết hạn (401) thì quay về màn hình đăng nhập.
   useEffect(() => {
     gh.setAuthToken(token)
     if (!token) return
@@ -98,34 +84,13 @@ export default function Admin() {
       cancelled = true
     }
   }, [token])
-  const notify = (text, kind = 'ok') => {
-    clearTimeout(timer.current)
-    setToast({ text, kind })
-    timer.current = setTimeout(() => setToast(null), 9000)
-  }
-  const saved = (what) =>
-    notify(`${what} Website sẽ cập nhật sau khi quá trình triển khai hoàn tất.`)
+
   const canLeave = () =>
     !saving && (!dirty || window.confirm('Bạn có thay đổi chưa lưu. Bỏ thay đổi và tiếp tục?'))
-  const logout = () => {
-    if (!canLeave()) return
-    clearToken()
-    gh.setAuthToken('')
-    setTokenState(null)
-    setData(null)
-    setFatal('')
-    setDirty(false)
-  }
-  const reload = async () => {
-    if (!canLeave()) return
-    try {
-      const snapshot = await loadData()
-      setData(snapshot)
-      setRevision((r) => r + 1)
-      setFatal('')
-      notify('Đã tải lại dữ liệu.')
-    } catch (e) {
-      notify(e.message, 'error')
+  const goToTab = (id) => {
+    if (id !== tab && canLeave()) {
+      setDirty(false)
+      setTab(id)
     }
   }
   const doLogin = async () => {
@@ -140,251 +105,94 @@ export default function Admin() {
       setLoginError(e.message)
     }
   }
-  const write = async (action) => {
-    if (saving) throw new Error('Đang lưu thay đổi khác. Vui lòng đợi một chút.')
-    setSaving(true)
+  const logout = () => {
+    if (!canLeave()) return
+    clearToken()
+    gh.setAuthToken('')
+    setTokenState(null)
+    setData(null)
+    setFatal('')
+    setDirty(false)
+  }
+  const reload = async () => {
+    if (!canLeave()) return
     try {
-      await action()
-    } finally {
-      setSaving(false)
+      setData(await loadData())
+      setRevision((r) => r + 1)
+      setFatal('')
+      notify('Đã tải lại dữ liệu.')
+    } catch (e) {
+      notify(e.message, 'error')
     }
   }
-  const saveProduct = (slug, values) =>
-    write(async () => {
-      const existing = data.products.find((p) => p.slug === slug)
-      const key =
-        slug ??
-        uniqueSlug(
-          values.title,
-          data.products.map((p) => p.slug),
-        )
-      const product = {
-        ...existing?.data,
-        ...values,
-        createdAt: slug === null ? new Date().toISOString() : existing?.data.createdAt || '',
-        updatedAt: new Date().toISOString(),
-      }
-      const uploads = takeUploads([product.cover, ...(product.gallery || [])].filter(Boolean))
-      await gh.commitFiles(`${slug ? 'Cập nhật' : 'Thêm'} sản phẩm: ${product.title}`, [
-        ...uploads.map((u) => ({ path: `public${u.path}`, blob: u.blob })),
-        { path: `content/products/${key}.json`, text: toJson(product) },
-      ])
-      markUploaded(uploads.map((u) => u.path))
-      setData((prev) => ({
-        ...prev,
-        products: sortProducts([
-          ...prev.products.filter((p) => p.slug !== key),
-          { slug: key, data: product },
-        ]),
-      }))
-      saved('Đã lưu sản phẩm.')
-    })
-  const deleteProduct = (slug) =>
-    write(async () => {
-      const item = data.products.find((p) => p.slug === slug)
-      await gh.commitFiles(`Xóa sản phẩm: ${item?.data.title ?? slug}`, [
-        { path: `content/products/${slug}.json`, remove: true },
-      ])
-      setData((prev) => ({ ...prev, products: prev.products.filter((p) => p.slug !== slug) }))
-      saved('Đã xóa sản phẩm.')
-    })
-  const saveSite = (values) =>
-    write(async () => {
-      const merged = {
-        ...data.site,
-        ...values,
-        contact: { ...data.site.contact, ...values.contact },
-      }
-      const uploads = takeUploads([merged.logo, merged.heroImage].filter(Boolean))
-      await gh.commitFiles('Cập nhật cài đặt website', [
-        ...uploads.map((u) => ({ path: `public${u.path}`, blob: u.blob })),
-        { path: 'content/site.json', text: toJson(merged) },
-      ])
-      markUploaded(uploads.map((u) => u.path))
-      setData((prev) => ({ ...prev, site: merged }))
-      saved('Đã lưu cài đặt.')
-    })
-  const saveCatalog = (next) =>
-    write(async () => {
-      const { changedProducts } = planCatalogUpdate(data.catalog, next, data.products)
-      await gh.commitFiles('Cập nhật danh mục và bộ lọc', [
-        { path: 'content/catalog.json', text: toJson(next) },
-        ...changedProducts.map((p) => ({
-          path: `content/products/${p.slug}.json`,
-          text: toJson(p.data),
-        })),
-      ])
-      const updates = new Map(changedProducts.map((p) => [p.slug, p]))
-      setData((prev) => ({
-        ...prev,
-        catalog: next,
-        products: prev.products.map((p) => updates.get(p.slug) || p),
-      }))
-      saved('Đã lưu danh mục và bộ lọc.')
-    })
-  const saveGuide = (next) =>
-    write(async () => {
-      await gh.commitFiles('Cập nhật hướng dẫn mua hàng', [
-        { path: 'content/guide.json', text: toJson(next) },
-      ])
-      setData((prev) => ({ ...prev, guide: next }))
-      saved('Đã lưu hướng dẫn.')
-    })
-  const saveCurrency = (next) =>
-    write(async () => {
-      validateCurrency(next)
-      await gh.commitFiles('Cập nhật tiền tệ và công thức quy đổi', [
-        { path: 'content/currency.json', text: toJson(next) },
-      ])
-      setData((prev) => ({ ...prev, currency: next }))
-      saved('Đã lưu tiền tệ.')
-    })
-  if (!token)
-    return (
-      <div className="ad-login">
-        <div className="ad-card ad-login-card">
-          <span className="ad-mark" aria-hidden="true">
-            一
-          </span>
-          <h1>Quản trị nội dung</h1>
-          <p>Đăng nhập bằng tài khoản GitHub có quyền ghi vào kho mã của website.</p>
-          <button type="button" className="ad-btn" onClick={doLogin}>
-            Đăng nhập bằng GitHub
-          </button>
-          {loginError && (
-            <p className="ad-error" role="alert">
-              {loginError}
-            </p>
-          )}
-          <a href="#/" className="ad-link">
-            Về trang chủ
-          </a>
-        </div>
-      </div>
-    )
-  return (
-    <div className="ad-shell">
-      <header className="ad-top">
-        <div className="ad-top-inner">
-          <div className="ad-brand">
-            <span className="ad-mark" aria-hidden="true">
-              一
-            </span>
-            <span className="ad-brand-name">Quản trị</span>
-          </div>
-          <nav className="ad-tabs" aria-label="Mục quản trị">
-            {tabs.map(([id, label, icon]) => (
-              <button
-                key={id}
-                type="button"
-                disabled={saving}
-                className={tab === id ? 'on' : ''}
-                aria-current={tab === id ? 'page' : undefined}
-                aria-label={label}
-                title={label}
-                onClick={() => {
-                  if (id !== tab && canLeave()) {
-                    setDirty(false)
-                    setTab(id)
-                  }
-                }}
-              >
-                <AdminIcon name={icon} size={16} />
-                <span>{label}</span>
-              </button>
-            ))}
-          </nav>
-          <div className="ad-user">
-            <a
-              href="#/"
-              className="ad-link"
-              onClick={(e) => {
-                if (!canLeave()) e.preventDefault()
-              }}
-            >
-              <span className="ad-link-text">Xem trang</span> <AdminIcon name="external" size={15} />
-            </a>
-            {data?.me && <img src={data.me.avatar_url} alt={data.me.login} title={data.me.login} />}
-            <button
-              type="button"
-              className="ad-icon-btn"
-              disabled={saving}
-              aria-label="Đăng xuất"
-              title="Đăng xuất"
-              onClick={logout}
-            >
-              <AdminIcon name="logout" />
-            </button>
-          </div>
-        </div>
-      </header>
-      <main className="ad-main">
-        <div key={tab} className="ad-page">
-          {data && pageMeta[tab] && (
-            <div className="ad-heading">
-              <h1>{pageMeta[tab][0]}</h1>
-              <p>
-                {tab === 'overview' && data.me
-                  ? `Xin chào ${data.me.login}, đây là tình hình cửa hàng của bạn.`
-                  : pageMeta[tab][1]}
-              </p>
-            </div>
-          )}
-        {fatal ? (
-          <div className="ad-empty ad-error-box" role="alert">
-            <p>{fatal}</p>
-            <button type="button" className="ad-btn" onClick={reload}>
-              Thử tải lại
-            </button>
-          </div>
-        ) : !data ? (
-          <div className="ad-skeletons" role="status" aria-label="Đang tải dữ liệu">
-            <div className="ad-skeleton wide" />
-            <div className="ad-skeleton" />
-            <div className="ad-skeleton" />
-            <div className="ad-skeleton" />
-          </div>
-        ) : tab === 'overview' ? (
-          <OverviewTab
-            products={data.products}
-            categories={data.catalog.categories}
-            onGo={(id) => {
-              if (canLeave()) {
-                setDirty(false)
-                setTab(id)
-              }
-            }}
-          />
-        ) : tab === 'products' ? (
+
+  if (!token) return <LoginScreen onLogin={doLogin} error={loginError} />
+
+  const heading = tabs.find((t) => t.id === tab).heading
+  const renderTab = () => {
+    const common = { onDirtyChange: setDirty }
+    switch (tab) {
+      case 'overview':
+        return <OverviewTab products={data.products} categories={data.catalog.categories} onGo={goToTab} />
+      case 'products':
+        return (
           <ProductsTab
             key={revision}
             products={data.products}
             categories={data.catalog.categories}
-            onSave={saveProduct}
-            onDelete={deleteProduct}
+            onSave={actions.saveProduct}
+            onDelete={actions.deleteProduct}
             onReload={reload}
           />
-        ) : tab === 'categories' ? (
-          <CategoriesTab
-            key={revision}
-            catalog={data.catalog}
-            products={data.products}
-            onSave={saveCatalog}
-            onDirtyChange={setDirty}
-          />
-        ) : tab === 'currency' ? (
-          <CurrencyTab key={revision} config={data.currency} onSave={saveCurrency} onDirtyChange={setDirty} />
-        ) : tab === 'guide' ? (
-          <GuideTab key={revision} guide={data.guide} onSave={saveGuide} onDirtyChange={setDirty} />
-        ) : (
-          <SettingsTab
-            key={revision}
-            site={data.site}
-            onSave={saveSite}
-            onError={(m) => notify(m, 'error')}
-            onDirtyChange={setDirty}
-          />
-        )}
+        )
+      case 'categories':
+        return <CategoriesTab key={revision} {...common} catalog={data.catalog} products={data.products} onSave={actions.saveCatalog} />
+      case 'guide':
+        return <GuideTab key={revision} {...common} guide={data.guide} onSave={actions.saveGuide} />
+      case 'currency':
+        return <CurrencyTab key={revision} {...common} config={data.currency} onSave={actions.saveCurrency} />
+      default:
+        return (
+          <SettingsTab key={revision} {...common} site={data.site} onSave={actions.saveSite} onError={(m) => notify(m, 'error')} />
+        )
+    }
+  }
+
+  return (
+    <div className="ad-shell">
+      <AdminTopBar
+        tabs={tabs}
+        tab={tab}
+        onTab={goToTab}
+        user={data?.me}
+        saving={saving}
+        canLeave={canLeave}
+        onLogout={logout}
+      />
+      <main className="ad-main">
+        <div key={tab} className="ad-page">
+          {data && heading && (
+            <div className="ad-heading">
+              <h1>{heading[0]}</h1>
+              <p>
+                {tab === 'overview' && data.me
+                  ? `Xin chào ${data.me.login}, đây là tình hình cửa hàng của bạn.`
+                  : heading[1]}
+              </p>
+            </div>
+          )}
+          {fatal ? (
+            <div className="ad-empty ad-error-box" role="alert">
+              <p>{fatal}</p>
+              <button type="button" className="ad-btn" onClick={reload}>
+                Thử tải lại
+              </button>
+            </div>
+          ) : !data ? (
+            <Skeletons />
+          ) : (
+            renderTab()
+          )}
         </div>
       </main>
       {toast && (

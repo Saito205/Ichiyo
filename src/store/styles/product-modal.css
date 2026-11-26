@@ -1,0 +1,70 @@
+/* Cửa sổ chi tiết sản phẩm: ảnh + thư viện ảnh, phân loại, mô tả, nút thêm vào giỏ. */
+.modal {
+  width: min(980px, calc(100% - 24px)); max-height: calc(100dvh - 24px);
+  padding: 0; border: 0; border-radius: 28px; overflow: hidden;
+  background: var(--white); color: var(--text);
+  box-shadow: 0 40px 80px -30px rgba(var(--heading-rgb, 14, 59, 44), 0.6);
+}
+.modal[open] { animation: pop 0.22s ease-out; }
+.modal::backdrop { background: rgba(var(--heading-rgb, 14, 59, 44), 0.5); backdrop-filter: blur(4px); animation: fade 0.22s ease-out; }
+.modal-close {
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  display: grid; place-items: center; width: 42px; height: 42px;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: var(--white); color: var(--forest);
+  transition: background 0.15s;
+}
+.modal-close:hover { background: var(--mint); }
+.modal-body { display: grid; grid-template-columns: 1.1fr 1fr; max-height: calc(100dvh - 24px); overflow-y: auto; }
+
+/* ---------- Ảnh ---------- */
+.modal-media { background: var(--mist); padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.modal-stage { aspect-ratio: 1; border-radius: 20px; overflow: hidden; background: var(--mint); display: grid; place-items: center; }
+.modal-stage img { width: 100%; height: 100%; object-fit: contain; background: var(--white); }
+.thumbs { display: flex; gap: 10px; flex-wrap: wrap; }
+.thumb { width: 64px; height: 64px; padding: 0; overflow: hidden; border: 2px solid transparent; border-radius: 12px; background: var(--white); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb.on { border-color: var(--green); }
+
+/* ---------- Thông tin ---------- */
+.modal-info { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 56px 36px 36px; }
+.modal-info h2 { font-size: 1.7rem; font-weight: 800; line-height: 1.25; letter-spacing: -0.015em; color: var(--forest); }
+.modal-price { color: var(--green); font-size: 1.45rem; font-weight: 800; letter-spacing: -0.01em; }
+.modal-summary { font-size: 1.05rem; color: var(--muted); }
+.modal-desc { display: flex; flex-direction: column; gap: 12px; margin: 6px 0 14px; }
+.modal-desc:empty { display: none; }
+.product-attributes { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 8px 0; }
+.product-attributes div { padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; }
+.product-attributes dt { color: var(--muted); font-size: .78rem; }
+.product-attributes dd { margin: 0; font-size: .9rem; font-weight: 600; }
+
+/* ---------- Chọn phân loại ---------- */
+.variant-picker { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 6px; }
+.variant-chip {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  min-width: 104px; padding: 10px 16px; text-align: left;
+  border: 1px solid var(--line); border-radius: 14px;
+  background: var(--white); color: var(--forest);
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.variant-chip:hover { border-color: var(--leaf); }
+.variant-chip.on { border-color: var(--green); background: var(--mist); box-shadow: 0 0 0 2px rgba(var(--accent-rgb, 30, 158, 99), 0.25); }
+.variant-chip:focus-visible { outline: 3px solid var(--leaf); outline-offset: 2px; }
+.variant-chip-label { font-size: 0.98rem; font-weight: 700; }
+.variant-chip-price { font-size: 0.85rem; font-weight: 600; color: var(--green); }
+.variant-chip-count { font-size: 0.74rem; color: var(--muted); }
+
+/* ---------- Nút thao tác ---------- */
+.modal-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 6px; }
+.in-cart-note { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 600; }
+
+@media (max-width: 820px) {
+  .modal { border-radius: 22px; }
+  .modal-body { grid-template-columns: 1fr; }
+  .modal-media { padding: 14px; }
+  .modal-stage { aspect-ratio: 4 / 3; }
+  .modal-info { padding: 22px 22px 28px; }
+}
+@media (max-width: 700px) {
+  .modal-price { font-size: 1.25rem; }
+}

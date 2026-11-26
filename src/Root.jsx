@@ -1,18 +1,17 @@
-import { Suspense, lazy, useSyncExternalStore } from 'react'
-import App from './App.jsx'
+import { Suspense, lazy } from 'react'
+import StoreApp from './store/StoreApp.jsx'
+import useHash from './shared/useHash.js'
+
+// Trang quản trị chỉ được tải khi mở "#/admin" để khách không phải tải thêm code.
 const Admin = lazy(() => import('./admin/Admin.jsx'))
-const subscribe = (callback) => {
-  window.addEventListener('hashchange', callback)
-  return () => window.removeEventListener('hashchange', callback)
-}
-const isAdminRoute = () => window.location.hash.startsWith('#/admin')
+
 export default function Root() {
-  const admin = useSyncExternalStore(subscribe, isAdminRoute)
-  return admin ? (
+  const isAdmin = useHash().startsWith('#/admin')
+  return isAdmin ? (
     <Suspense fallback={<div className="ad-loading">Đang tải…</div>}>
       <Admin />
     </Suspense>
   ) : (
-    <App />
+    <StoreApp />
   )
 }
