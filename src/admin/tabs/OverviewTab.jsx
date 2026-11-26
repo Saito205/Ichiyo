@@ -32,7 +32,6 @@ export default function OverviewTab({ products, categories, onGo }) {
   const featured = products.filter((p) => p.data.featured).length
   const withVariants = products.filter((p) => p.data.variants?.length > 0).length
   const variantTotal = products.reduce((sum, p) => sum + (p.data.variants?.length || 0), 0)
-  const filterTotal = categories.reduce((sum, c) => sum + c.filters.length, 0)
   const pct = total ? Math.round((featured / total) * 100) : 0
 
   const byCategory = categories.map((c) => ({
@@ -49,7 +48,7 @@ export default function OverviewTab({ products, categories, onGo }) {
 
   const stats = [
     { icon: 'box', value: total, label: 'Sản phẩm', sub: 'Đang có trên website' },
-    { icon: 'tag', value: categories.length, label: 'Danh mục', sub: `${filterTotal} bộ lọc` },
+    { icon: 'tag', value: categories.length, label: 'Danh mục', sub: 'Nhóm sản phẩm' },
     { icon: 'star', value: featured, label: 'Nổi bật', sub: `${pct}% tổng sản phẩm` },
     {
       icon: 'layers',
@@ -85,7 +84,7 @@ export default function OverviewTab({ products, categories, onGo }) {
             </div>
           </header>
           {bars.length === 0 ? (
-            <p className="ov-empty">Chưa có danh mục nào. Hãy tạo ở tab “Danh mục & bộ lọc”.</p>
+            <p className="ov-empty">Chưa có danh mục nào. Hãy tạo ở tab “Danh mục”.</p>
           ) : (
             <div className="ov-bars">
               {bars.map((b, i) => (

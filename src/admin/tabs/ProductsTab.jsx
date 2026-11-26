@@ -10,7 +10,6 @@ const emptyProduct = (order) => ({
   variants: [],
   category: '',
   categoryId: '',
-  attributes: {},
   summary: '',
   description: '',
   cover: '',

@@ -1,4 +1,4 @@
-// Danh mục, bộ lọc và các hàm lọc / sắp xếp / phân trang sản phẩm.
+// Danh mục và các hàm lọc / sắp xếp / phân trang sản phẩm.
 import { isFullySoldOut, lowestPrice } from './price.js'
 import { searchText, slugify, uniqueId } from './text.js'
 
@@ -14,14 +14,8 @@ export function categoryFor(product, categories) {
 // Tự nhận diện danh mục cũ khi dự án chưa có catalog.json.
 export function normalizeCatalog(raw, products = []) {
   const categories = (Array.isArray(raw?.categories) ? raw.categories : []).map((c) => ({
-    ...c,
     id: c.id || slugify(c.name),
     name: String(c.name || '').trim(),
-    filters: (Array.isArray(c.filters) ? c.filters : []).map((f) => ({
-      id: f.id || slugify(f.name),
-      name: String(f.name || '').trim(),
-      options: [...new Set((f.options || []).map((o) => String(o).trim()).filter(Boolean))],
-    })),
   }))
   for (const product of products) {
     const p = product.data || product
@@ -29,17 +23,9 @@ export function normalizeCatalog(raw, products = []) {
     categories.push({
       id: p.categoryId || uniqueId(p.category, categories.map((c) => c.id)),
       name: p.category,
-      filters: [],
     })
   }
   return { categories }
-}
-export function cleanAttributes(attributes = {}, category) {
-  return Object.fromEntries(
-    (category?.filters || [])
-      .filter((f) => f.options.includes(attributes[f.id]))
-      .map((f) => [f.id, attributes[f.id]]),
-  )
 }
 export function validateCatalog(catalog) {
   const seen = new Set()
@@ -50,23 +36,11 @@ export function validateCatalog(catalog) {
     if (!c.id || ids.has(c.id)) throw new Error('Mã danh mục bị trùng. Hãy tạo lại danh mục mới.')
     seen.add(searchText(c.name))
     ids.add(c.id)
-    const names = new Set()
-    const filterIds = new Set()
-    for (const f of c.filters) {
-      if (!f.name.trim()) throw new Error(`Hãy nhập tên bộ lọc trong "${c.name}".`)
-      if (names.has(searchText(f.name)) || filterIds.has(f.id))
-        throw new Error(`Bộ lọc trong "${c.name}" bị trùng.`)
-      names.add(searchText(f.name))
-      filterIds.add(f.id)
-      if (!f.options.length) throw new Error(`Bộ lọc "${f.name}" cần ít nhất một lựa chọn.`)
-      if (new Set(f.options.map(searchText)).size !== f.options.length)
-        throw new Error(`Lựa chọn của "${f.name}" bị trùng.`)
-    }
   }
 }
+// Kiểm tra danh mục mới và tìm các sản phẩm cần sửa theo (khi đổi tên danh mục).
 export function planCatalogUpdate(previous, next, products) {
   validateCatalog(next)
-  let clearedValues = 0
   const changedProducts = []
   for (const product of products) {
     const oldCategory = categoryFor(product.data, previous.categories)
@@ -76,15 +50,11 @@ export function planCatalogUpdate(previous, next, products) {
       throw new Error(
         `Danh mục "${oldCategory.name}" còn sản phẩm. Hãy chuyển sản phẩm sang danh mục khác trước khi xóa.`,
       )
-    const attributes = cleanAttributes(product.data.attributes, category)
-    clearedValues += Object.keys(product.data.attributes || {}).filter(
-      (key) => product.data.attributes[key] && !(key in attributes),
-    ).length
-    const data = { ...product.data, categoryId: category.id, category: category.name, attributes }
+    const data = { ...product.data, categoryId: category.id, category: category.name }
     if (JSON.stringify(data) !== JSON.stringify(product.data))
       changedProducts.push({ ...product, data })
   }
-  return { changedProducts, clearedValues }
+  return { changedProducts }
 }
 const timestamp = (p) => Date.parse(p.createdAt) || 0
 export function newestFirst(a, b) {
@@ -124,26 +94,16 @@ export function homeProducts(products) {
 }
 export function filterProducts(
   products,
-  { query = '', categoryId = '', attributes = {}, sort = 'newest' } = {},
+  { query = '', categoryId = '', sort = 'newest' } = {},
   categories = [],
 ) {
   const keyword = searchText(query)
-  const category = categories.find((c) => c.id === categoryId)
   return products
-    .filter((p) => {
-      if (categoryId && categoryFor(p, categories)?.id !== categoryId) return false
-      if (
-        keyword &&
-        !searchText(`${p.title} ${p.summary || ''} ${p.category || ''}`).includes(keyword)
-      )
-        return false
-      return (
-        !category ||
-        category.filters.every(
-          (f) => !attributes[f.id] || p.attributes?.[f.id] === attributes[f.id],
-        )
-      )
-    })
+    .filter(
+      (p) =>
+        (!categoryId || categoryFor(p, categories)?.id === categoryId) &&
+        (!keyword || searchText(`${p.title} ${p.summary || ''} ${p.category || ''}`).includes(keyword)),
+    )
     .sort((a, b) => inStockFirst(a, b) || (sorters[sort] || newestFirst)(a, b) || newestFirst(a, b))
 }
 export function paginate(items, page, size = PAGE_SIZE) {

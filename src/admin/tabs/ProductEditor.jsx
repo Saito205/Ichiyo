@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { categoryFor, cleanAttributes } from '../../shared/catalog.js'
+import { categoryFor } from '../../shared/catalog.js'
 import { searchText } from '../../shared/text.js'
 import { checkUrl } from '../../shared/url.js'
 import useModalDialog from '../../shared/useModalDialog.js'
@@ -14,7 +14,6 @@ const toForm = (data, categories) => ({
   ...data,
   price: data.price ?? '',
   categoryId: categoryFor(data, categories)?.id || '',
-  attributes: data.attributes || {},
   variants: (data.variants || []).map((v) => ({
     id: v.id || newVariantId(),
     label: v.label ?? '',
@@ -110,35 +109,6 @@ function VariantsEditor({ variants, onChange }) {
   )
 }
 
-// Các bộ lọc của danh mục đang chọn (Màu sắc, Kích thước…).
-function AttributeFields({ category, attributes, onChange }) {
-  return (
-    <section className="admin-product-filters">
-      <h3>Bộ lọc: {category.name}</h3>
-      <div className="ad-row">
-        {category.filters.map((filter) => (
-          <label className="ad-field" key={filter.id}>
-            <span className="ad-label">{filter.name}</span>
-            <select
-              className="ad-input"
-              value={filter.options.includes(attributes?.[filter.id]) ? attributes[filter.id] : ''}
-              onChange={(e) => onChange({ ...attributes, [filter.id]: e.target.value })}
-            >
-              <option value="">Chưa chọn</option>
-              {filter.options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </label>
-        ))}
-      </div>
-      <p className="ad-hint">Khách chọn bộ lọc nào thì chỉ thấy sản phẩm được gán đúng giá trị đó.</p>
-    </section>
-  )
-}
-
 export default function ProductEditor({ product, categories, onSave, onDelete, onClose }) {
   const ref = useModalDialog()
   const [form, setForm] = useState(() => toForm(product.data, categories))
@@ -190,7 +160,6 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
         variants: savedVariants,
         categoryId: category?.id || '',
         category: category?.name || '',
-        attributes: cleanAttributes(form.attributes, category),
         summary: (form.summary || '').trim(),
         description: (form.description || '').trim(),
         cover: form.cover || '',
@@ -258,7 +227,7 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
                   value={form.categoryId}
                   onChange={(e) => {
                     const c = categories.find((item) => item.id === e.target.value)
-                    setForm((prev) => ({ ...prev, categoryId: c?.id || '', category: c?.name || '', attributes: {} }))
+                    setForm((prev) => ({ ...prev, categoryId: c?.id || '', category: c?.name || '' }))
                   }}
                 >
                   <option value="">Chưa phân loại</option>
@@ -275,12 +244,9 @@ export default function ProductEditor({ product, categories, onSave, onDelete, o
               </label>
             </div>
 
-            {category?.filters.length > 0 && (
-              <AttributeFields category={category} attributes={form.attributes} onChange={set('attributes')} />
-            )}
             {!categories.length && (
               <p className="ad-hint">
-                Tạo danh mục và bộ lọc trong tab “Danh mục & bộ lọc” trước khi phân loại sản phẩm.
+                Tạo danh mục trong tab “Danh mục” trước khi phân loại sản phẩm.
               </p>
             )}
             <label className="ad-field">

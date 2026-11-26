@@ -17,7 +17,7 @@ import { loadData, useAdminActions } from './useAdminData.js'
 const tabs = [
   { id: 'overview', label: 'Tổng quan', icon: 'home', heading: ['Tổng quan', 'Số liệu nhanh về cửa hàng của bạn.'] },
   { id: 'products', label: 'Sản phẩm', icon: 'box', heading: ['Sản phẩm', 'Thêm, chỉnh sửa và quản lý toàn bộ sản phẩm.'] },
-  { id: 'categories', label: 'Danh mục & bộ lọc', icon: 'tag' },
+  { id: 'categories', label: 'Danh mục', icon: 'tag' },
   { id: 'guide', label: 'Hướng dẫn', icon: 'book' },
   { id: 'currency', label: 'Tiền tệ', icon: 'currency' },
   { id: 'settings', label: 'Cài đặt', icon: 'sliders', heading: ['Cài đặt', 'Thông tin chung và liên hệ hiển thị trên website.'] },

@@ -6,18 +6,18 @@ import Icon from '../components/Icon.jsx'
 import Pagination from '../components/Pagination.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 
-const noFilters = { query: '', categoryId: '', attributes: {}, sort: 'newest' }
+const noFilters = { query: '', categoryId: '', sort: 'newest' }
 
 export default function Products({ onOpen }) {
   const [filters, setFilters] = useState(noFilters)
   const [page, setPage] = useState(1)
   const results = useRef(null)
-  const { query, categoryId, attributes, sort } = filters
+  const { query, categoryId, sort } = filters
   const filtered = filterProducts(products, filters, categories)
   const paged = paginate(filtered, page)
-  const active = query || categoryId || Object.values(attributes).some(Boolean)
+  const active = query || categoryId
 
-  // Mỗi lần đổi bộ lọc thì quay về trang 1.
+  // Mỗi lần đổi tìm kiếm / danh mục / sắp xếp thì quay về trang 1.
   const updateFilters = (change) => {
     setFilters((prev) => ({ ...prev, ...change(prev) }))
     setPage(1)
@@ -42,11 +42,7 @@ export default function Products({ onOpen }) {
         onQuery={(value) => updateFilters(() => ({ query: value }))}
         categories={categories}
         categoryId={categoryId}
-        onCategory={(id) => updateFilters(() => ({ categoryId: id, attributes: {} }))}
-        attributes={attributes}
-        onAttribute={(id, value) =>
-          updateFilters((prev) => ({ attributes: { ...prev.attributes, [id]: value } }))
-        }
+        onCategory={(id) => updateFilters(() => ({ categoryId: id }))}
       />
       <div className="results-heading" ref={results} tabIndex={-1}>
         <p className="count" role="status">
@@ -56,7 +52,7 @@ export default function Products({ onOpen }) {
           {active && (
             <button type="button" className="reset-filters" onClick={() => updateFilters(() => noFilters)}>
               <Icon name="close" size={16} />
-              Xóa bộ lọc
+              Bỏ lọc
             </button>
           )}
           <label className="sort-field">
@@ -80,7 +76,7 @@ export default function Products({ onOpen }) {
       ) : (
         <div className="empty">
           <h2>Chưa tìm thấy sản phẩm</h2>
-          <p>Thử từ khóa khác hoặc bỏ bớt bộ lọc nhé.</p>
+          <p>Thử từ khóa khác hoặc chọn danh mục khác nhé.</p>
         </div>
       )}
       <Pagination current={paged.current} pageCount={paged.pageCount} onChange={goTo} />

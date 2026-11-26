@@ -91,10 +91,10 @@ export function useAdminActions(data, setData, onSaved) {
     setData((prev) => ({ ...prev, site }))
   })
 
-  // Đổi / xóa danh mục, bộ lọc có thể phải sửa cả các sản phẩm đang dùng chúng.
-  const saveCatalog = write('Đã lưu danh mục và bộ lọc.', async (catalog) => {
+  // Đổi tên danh mục phải sửa cả các sản phẩm đang dùng nó.
+  const saveCatalog = write('Đã lưu danh mục.', async (catalog) => {
     const { changedProducts } = planCatalogUpdate(data.catalog, catalog, data.products)
-    await commit('Cập nhật danh mục và bộ lọc', [
+    await commit('Cập nhật danh mục', [
       gh.jsonFile('content/catalog.json', catalog),
       ...changedProducts.map((p) => gh.jsonFile(productPath(p.slug), p.data)),
     ])

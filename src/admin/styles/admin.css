@@ -235,7 +235,7 @@ label:focus-within > .ad-file + * , .ad-btn:focus-within, .ad-add-img:focus-with
 .ad-skeleton.wide { grid-column: 1 / -1; height: 90px; }
 @keyframes ad-shimmer { to { background-position: -220% 0; } }
 
-/* ---------- Danh mục, bộ lọc và trình soạn hướng dẫn ---------- */
+/* ---------- Danh mục và trình soạn hướng dẫn ---------- */
 .admin-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .admin-dialog-fields { display: flex; flex-direction: column; min-height: 0; max-height: calc(100dvh - 24px); }
 .admin-dialog-fields .ad-dialog-body { flex: 1; min-height: 0; }
@@ -263,8 +263,6 @@ label:focus-within > .ad-file + * , .ad-btn:focus-within, .ad-add-img:focus-with
 .admin-note-field { margin-top: 28px; }
 .admin-guide-preview { padding: 30px; }
 .admin-guide-preview .guide-steps { grid-template-columns: 1fr; }
-.admin-product-filters { padding: 18px; margin-bottom: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--mist); }
-.admin-product-filters h3 { font-size: .95rem; margin-bottom: 16px; color: var(--forest); }
 
 /* ---------- Phân loại sản phẩm trong trình sửa ---------- */
 .admin-product-variants { padding: 18px; margin-bottom: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--mist); }

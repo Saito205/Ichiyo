@@ -46,7 +46,7 @@ Cần 1 Cloudflare Worker nhỏ làm "OAuth proxy":
 Xong! Vào `/admin/` để quản lý nội dung.
 
 ## Tính năng cho khách
-- Tìm kiếm không dấu, lọc theo danh mục / bộ lọc, sắp xếp (mới nhất, giá, tên).
+- Tìm kiếm không dấu, lọc theo danh mục, sắp xếp (mới nhất, giá, tên).
 - Mỗi sản phẩm có link riêng: `…/#/products/<mã-sản-phẩm>` (nút “Sao chép link” trong cửa sổ chi tiết).
 - Bấm ảnh lớn để xem toàn màn hình: vuốt đổi ảnh, chạm để phóng to.
 - Giỏ hàng: nút “Sao chép đơn hàng” và “Chép & nhắn Facebook/Zalo/…” (hiện khi đã điền link ở Cài đặt).
@@ -64,7 +64,7 @@ npm run build          # build ra thư mục dist/
 ```
 content/                     NỘI DUNG (trang quản trị sửa các file này)
   site.json                  thông tin chung, liên hệ, màu sắc
-  catalog.json               danh mục & bộ lọc
+  catalog.json               danh mục
   guide.json                 trang hướng dẫn mua hàng
   currency.json              các loại tiền & công thức quy đổi
   products/*.json            mỗi sản phẩm 1 file
@@ -77,7 +77,7 @@ src/
   main.jsx, Root.jsx         điểm khởi động; Root chọn Cửa hàng hay Quản trị theo URL
   shared/                    DÙNG CHUNG cho cả cửa hàng và quản trị
     content.js               nạp dữ liệu từ content/
-    catalog.js               danh mục, bộ lọc, sắp xếp, phân trang
+    catalog.js               danh mục, tìm / lọc, sắp xếp, phân trang
     price.js                 giá tiền & phân loại sản phẩm
     currency.js              bộ tính công thức quy đổi tiền (an toàn, không dùng eval)
     guide.js, theme.js       hướng dẫn mặc định; bảng màu website

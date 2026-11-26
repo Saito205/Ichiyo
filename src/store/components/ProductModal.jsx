@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { copyText } from '../../shared/clipboard.js'
-import { categories } from '../../shared/content.js'
 import {
   findVariant,
   formatPrice,
@@ -122,9 +121,7 @@ export default function ProductModal({ product, onClose }) {
   const priceLabel = withVariants
     ? formatPrice(unitPriceOf(product, variantId)) || priceRangeLabel(product)
     : formatPrice(product.price)
-  const category = categories.find((c) => c.id === product.categoryId)
   const link = safeUrl(product.link)
-  const attributes = (category?.filters || []).filter((f) => product.attributes?.[f.id])
 
   return (
     <dialog
@@ -158,16 +155,6 @@ export default function ProductModal({ product, onClose }) {
             />
           )}
           {product.summary && <p className="modal-summary">{product.summary}</p>}
-          {attributes.length > 0 && (
-            <dl className="product-attributes">
-              {attributes.map((f) => (
-                <div key={f.id}>
-                  <dt>{f.name}</dt>
-                  <dd>{product.attributes[f.id]}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
           <div className="modal-desc">
             {paragraphs(product.description).map((t, i) => (
               <p key={i}>{t}</p>

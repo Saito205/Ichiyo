@@ -5,7 +5,7 @@ export const DEFAULT_GUIDE = {
     {
       id: 'chon-san-pham',
       title: 'Chọn sản phẩm',
-      body: 'Vào trang Sản phẩm, chọn danh mục và sử dụng các bộ lọc để tìm món phù hợp. Bấm vào sản phẩm để xem ảnh và mô tả chi tiết.',
+      body: 'Vào trang Sản phẩm, tìm theo tên hoặc chọn danh mục để thấy món phù hợp. Bấm vào sản phẩm để xem ảnh và mô tả chi tiết.',
     },
     {
       id: 'lien-he',
